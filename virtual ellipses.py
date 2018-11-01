@@ -2,7 +2,8 @@
 """
 Spyder Editor
 
-Miao Li
+Miao Li 
+This is the first version
 """
 from psychopy import locale_setup, gui, visual, core, data, event, logging, sound, monitors
 from psychopy.constants import (NOT_STARTED, STARTED, PLAYING, PAUSED,
