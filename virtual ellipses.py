@@ -13,17 +13,16 @@ from numpy import (sin, cos, tan, log, log10, pi, average,
 import sys, random, os, time
 import math
 from sympy import Ellipse, Point, Line, sqrt
+from scipy.spatial import distance
 #import matplotlib.pyplot as plt
 
 #some variables
 
 disk_radius = 5
-N_disks = 30
+N_disks = 10
 
-
+#win to show stimuli
 win = visual.Window((1024, 768), units='pix', fullscr=False)
-
-
 
 # fixation 
 text_msg = visual.TextStim(win, text='message',color=(-1.0, -1.0, -1.0))
@@ -32,11 +31,9 @@ text_msg.draw()
 #win.flip()
 core.wait(0.80)
 
-
 # a list of posible positions
 grid_dimention = 18
 linelength = 40
-
 start_x = -0.5*linelength*grid_dimention + 0.5*linelength
 start_y = -0.5*linelength*grid_dimention + 0.5*linelength
 
@@ -46,8 +43,9 @@ for x_count in range(0, grid_dimention):
     for y_count in range(0, grid_dimention):
         new_y = start_y + y_count*linelength
         positions.append((new_x, new_y))
-        
 
+print("posi", positions)
+        
 #target disk
 trgt_disk = visual.Circle(win, radius = disk_radius, lineColor = "black", fillColor = "black")
 #trgt_disk.draw()
@@ -73,11 +71,12 @@ print (disk_posi)
 #FIXME
 def defineVirtualEllipses(coordinate, ka = 0.02, kb = 0.05): # parameter for a and b; 
     
-    e = math.sqrt(coordinate[0]**2 + coordinate[1]**2)    
+    e = distance.euclidean(coordinate, (0,0)) #np.sqrt((coordinate[0])**2 + (coordinate[1])**2)    
     a = ka * e
     b = kb * e
     ellipse_coordinate = [a, b]
     return ellipse_coordinate
+
 
 #ellipse = defineVirtualEllipses(disk_posi)
 
@@ -88,16 +87,17 @@ trgt_disk.setPos(disk_posi)
 trgt_disk.draw()
 #win.flip()
 core.wait(0.80)
-print (disk_posi)
+print ("disk_posi",disk_posi)
 
 
 #the virtual ellipse of the first disk
 virtual_e_radius = defineVirtualEllipses(disk_posi) 
 virtual_e = Ellipse(Point(disk_posi[0],disk_posi[1]),virtual_e_radius[0],virtual_e_radius[1])
-print (virtual_e)
+print ("first virtual_e",virtual_e)
+
 
 '''
-#second disk
+#second disk and virtul ellipse
 taken_posi = [disk_posi]
 #for i in range (0, N_disks):
 disk_posi_new = random.choice(positions)
@@ -122,52 +122,67 @@ else:
     trgt_disk.setPos(disk_posi_new)
     trgt_disk.draw()
     win.flip()
-
-
-
 '''
-def caclulateNewList (random_disk_coordinate, taken_list): # (新生成的随机点，已经保存的点坐标list)
+
+
+#FIXME
+def caclulateNewList (random_disk_coordinate, taken_list): # (新生成的随机点，已经保存的点坐标list) # new random disk corrdinate, previous disk corrdinates list
     
     virtual_e_radius_2 = defineVirtualEllipses(random_disk_coordinate)
-    virtual_e_2 = Ellipse(Point(random_disk_coordinate[0],random_disk_coordinate[1]),virtual_e_radius_2[0],virtual_e_radius_2[1])
+    virtual_e_2 = Ellipse(Point(random_disk_coordinate[0],random_disk_coordinate[1]),virtual_e_radius_2[0],virtual_e_radius_2[1]) #last ellipse 
     
     for exist_n in range (0, len(taken_list)):
         
         exist_e_radius = defineVirtualEllipses(taken_list[exist_n])
-        exist_e = Ellipse(Point(taken_list[exist_n][0],taken_list[exist_n][1]), exist_e_radius[0],exist_e_radius[1])
+        exist_e = Ellipse(Point(taken_list[exist_n][0], taken_list[exist_n][1]), exist_e_radius[0],exist_e_radius[1]) #perivous ellipses #FIXME
         
-        if len(virtual_e_2.intersection(exist_e)): #inspect intersection between two virtual ellipes
+        print("e_list",virtual_e_2.intersection(exist_e))
+        
+        if virtual_e_2.intersection(exist_e): #inspect intersection between two virtual ellipes #FIXME
             continue
         else:
             taken_list.append(random_disk_coordinate)
-            
+            #taken_list = np.append([taken_list],[random_disk_coordinate])
+            print("taken_list", taken_list)
     return taken_list  #final list of position I want
 
 
 
 
+#TODO1
 #disks_loop from the second disk
 
 taken_posi = [disk_posi]
+print ("taken_posi",taken_posi)
 
-random_N = 0
-while random_N < N_disks:
+
+N = 0
+while N < N_disks:
 #for random_N in range(0, N_disks):   
     disk_posi_new = random.choice(positions)
     while disk_posi_new in taken_posi:
         disk_posi_new = random.choice(positions)
     taken_posi.append(disk_posi_new)
-    print(taken_posi)
+    print("taken posi", taken_posi)
     
     new_list = caclulateNewList(disk_posi_new,taken_posi)
-    random_N = random_N+1
+    N = N + 1
     
-print (new_list)
-        
-   
-         
-        
+print ("new", new_list) 
 
+
+'''
+#TODO2
+new_list_array = np.zeros((N_disks,2)) #empty list of cooridinate, N_disks pairs
+
+for random_N in range (0, N_disks):
+    
+    new_list_array[random_N] = random.choice(positions)
+    
+    new_list = caclulateNewList(new_list_array[random_N],new_list_array)
+    
+print(new_list)
+'''
 
 
 
