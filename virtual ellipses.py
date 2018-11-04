@@ -141,9 +141,10 @@ def caclulateNewList (random_disk_coordinate, taken_list): # (新生成的随机
         if virtual_e_2.intersection(exist_e): #inspect intersection between two virtual ellipes #FIXME
             return [0]
         else:
-            taken_list.append(random_disk_coordinate)
-            #taken_list = np.append([taken_list],[random_disk_coordinate])
-            return taken_list  #final list of position I want
+            continue
+    taken_list.append(random_disk_coordinate)
+    #taken_list = np.append([taken_list],[random_disk_coordinate])
+    return taken_list  #final list of position I want
 
 #TODO1
 #disks_loop from the second disk
