@@ -85,7 +85,7 @@ def defineVirtualEllipses(coordinate, ka = 0.02, kb = 0.05): # parameter for a a
 disk_posi = random.choice(positions)
 trgt_disk.setPos(disk_posi) 
 trgt_disk.draw()
-#win.flip()
+win.flip()
 core.wait(0.80)
 print ("disk_posi",disk_posi)
 
@@ -136,40 +136,39 @@ def caclulateNewList (random_disk_coordinate, taken_list): # (新生成的随机
         exist_e_radius = defineVirtualEllipses(taken_list[exist_n])
         exist_e = Ellipse(Point(taken_list[exist_n][0], taken_list[exist_n][1]), exist_e_radius[0],exist_e_radius[1]) #perivous ellipses #FIXME
         
-        print("e_list",virtual_e_2.intersection(exist_e))
+        #print("e_list",virtual_e_2.intersection(exist_e))
         
         if virtual_e_2.intersection(exist_e): #inspect intersection between two virtual ellipes #FIXME
-            continue
+            return [0]
         else:
             taken_list.append(random_disk_coordinate)
             #taken_list = np.append([taken_list],[random_disk_coordinate])
-            print("taken_list", taken_list)
-    return taken_list  #final list of position I want
-
-
-
+            return taken_list  #final list of position I want
 
 #TODO1
 #disks_loop from the second disk
 
 taken_posi = [disk_posi]
-print ("taken_posi",taken_posi)
+#print ("taken_posi",taken_posi)
 
-
-N = 0
-while N < N_disks:
+while 1:
 #for random_N in range(0, N_disks):   
     disk_posi_new = random.choice(positions)
     while disk_posi_new in taken_posi:
         disk_posi_new = random.choice(positions)
-    taken_posi.append(disk_posi_new)
+    #taken_posi.append(disk_posi_new)
     print("taken posi", taken_posi)
-    
     new_list = caclulateNewList(disk_posi_new,taken_posi)
-    N = N + 1
-    
-print ("new", new_list) 
+    if len(new_list) > 19:
+        break  #final list of position I want
+print ("new", new_list)
 
+
+'''
+最后的while应当为一个死循环，直到if已知点list达到规定长度，break出while循环
+当判断重叠时，和任意一个点重叠都应该continue这个while循环，得到新的随机点
+只有当新的随机点和所有已知点都不重叠时，才能把新的随机点存入
+'''
 
 '''
 #TODO2
@@ -182,23 +181,12 @@ for random_N in range (0, N_disks):
     new_list = caclulateNewList(new_list_array[random_N],new_list_array)
     
 print(new_list)
+
 '''
 
-
-
-
+#loop target disks with virtual ellipses
+for i in range(0, 19):
+    trgt_disk.setPos(new_list[i]) 
+    trgt_disk.draw()
+    #win.flip()
     
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
