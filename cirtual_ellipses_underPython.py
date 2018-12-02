@@ -24,8 +24,8 @@ disk_radius = 0.2
 #N_disks = 33
 
 # a list of posible positions
-grid_dimention_x = 8
-grid_dimention_y = 8
+grid_dimention_x = 152
+grid_dimention_y = 84
 
 
 
@@ -49,6 +49,7 @@ except ValueError:
     pass
     
 random.shuffle(positions)
+
 
 
 def defineVirtualEllipses(coordinate, ka = 0.25, kb = 0.1): # parameter for a and b; 
