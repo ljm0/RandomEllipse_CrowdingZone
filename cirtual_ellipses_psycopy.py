@@ -65,26 +65,30 @@ except ValueError:
 print("len0:", len(positions))
 
 # TODO Define a fovea area
-r = 1500
+r = 50
 
 del_p = []
 for tempP in positions:
     if math.sqrt(tempP[0]**2 + tempP[1]**2) < r:
+        
         #positions.remove(tempP)
         del_p.append(tempP)
+    
         
-for points in del_p:
-    plt.plot(points[0], points[1], 'ro')
-plt.show()
-'''
+# for points in del_p:
+#     plt.plot(points[0], points[1], 'ro')
+# plt.show()
+
         try:
+            print ("del_p:", del_p)
             positions.remove(tempP)
         except ValueError:
             pass
-'''               
+
+            
 #random.shuffle(positions)
 print("len1:",len(positions))
-sys.exit()
+#sys.exit()
 
 #target disk
 trgt_disk = visual.Circle(win, radius = disk_radius, lineColor = "black", fillColor = "black")
