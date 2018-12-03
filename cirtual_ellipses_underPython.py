@@ -4,6 +4,8 @@ Created on Sun Nov 18 16:36:16 2018
 
 @author: Miao
 This scrip :
+
+
     1. define posible positins of disks
     2. define virtual ellipse with 3 parameters, coordinate, ka and kb
     3. check a postion is in/outside an ellipse
