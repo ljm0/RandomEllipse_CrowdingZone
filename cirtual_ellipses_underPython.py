@@ -20,7 +20,6 @@ import matplotlib.pyplot as plt
 from shapely.geometry.polygon import LinearRing
 from math import atan2, pi
 from matplotlib.patches import Ellipse
-import sys
 
 #some variables
 disk_radius = 0.2
@@ -51,7 +50,7 @@ try:
 except ValueError:
     pass
     
-#random.shuffle(positions)
+random.shuffle(positions)
 
 
 
@@ -116,10 +115,9 @@ def ellipse_polyline_intersection(ellipses, n=100):
     eb = LinearRing(ellipseB)
     mp = ea.intersection(eb)
     #intersectionX, intersectionY are the intersections
-#    if type(mp) == types.GeneratorType:
-#    print("ea:",ea)
-#    print("eb:",eb)
-#    print("mp:",mp)
+    #if type(mp) == types.GeneratorType:
+    # print(mp.geom_type)
+    # print(mp)
     if mp.geom_type == 'Point':
         print(mp.geom_type)
         print(mp.x)
@@ -312,7 +310,7 @@ def drawEllipse (e_posi):
         #e.set_alpha(np.random.rand())
         e.set_facecolor(np.random.rand(3))
         
-    ax.set_xlim(-145, 145)
-    ax.set_ylim(-145, 145)
+    ax.set_xlim(-500, 500)
+    ax.set_ylim(-500, 500)
     plt.show()
 draw = drawEllipse(taken_posi)

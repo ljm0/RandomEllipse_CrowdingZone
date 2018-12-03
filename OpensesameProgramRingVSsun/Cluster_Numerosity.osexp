@@ -1,0 +1,664 @@
+---
+API: 2
+OpenSesame: 3.1.6
+Platform: nt
+---
+set width 1024
+set uniform_coordinates yes
+set title "Extended template"
+set subject_parity even
+set subject_nr 0
+set start experiment
+set sound_sample_size -16
+set sound_freq 48000
+set sound_channels 2
+set sound_buf_size 1024
+set sampler_backend legacy
+set round_decimals 2
+set mouse_backend legacy
+set keyboard_backend legacy
+set height 768
+set fullscreen no
+set form_clicks no
+set foreground "#000000"
+set font_underline no
+set font_size 18
+set font_italic no
+set font_family mono
+set font_bold no
+set experiment_path "C:/Users/Owner/Desktop/SCALab/Programming/Crowding and Numerosity_programming"
+set disable_garbage_collection yes
+set description "A template containing a practice and an experimental phase"
+set coordinates uniform
+set compensation 0
+set color_backend legacy
+set clock_backend legacy
+set canvas_backend legacy
+set bidi yes
+set background "#dedede"
+
+define notepad about_this_template
+	__note__
+	This template already contains the basic structure of a typical experiment.
+	It consists of a practice phase, followed by an experimental phase. For more
+	information, please visit <http://osdoc.cogsci.nl/>
+	Have fun with OpenSesame!
+	__end__
+	set description "Some pointers to help you gest started!"
+
+define loop block_loop
+	set source_file ""
+	set source table
+	set skip 0
+	set repeat 1
+	set order random
+	set offset no
+	set item trial_sequence
+	set description "A single block of trials"
+	set cycles 72
+	set continuous no
+	set column_order ""
+	set break_if_on_first yes
+	set break_if never
+	setcycle 0 Disk_size 5
+	setcycle 0 Eccentricity 200
+	setcycle 0 Number_of_disks 3
+	setcycle 0 Number_of_locations 6
+	setcycle 1 Disk_size 7
+	setcycle 1 Eccentricity 200
+	setcycle 1 Number_of_disks 3
+	setcycle 1 Number_of_locations 6
+	setcycle 2 Disk_size 9
+	setcycle 2 Eccentricity 200
+	setcycle 2 Number_of_disks 3
+	setcycle 2 Number_of_locations 6
+	setcycle 3 Disk_size 5
+	setcycle 3 Eccentricity 150
+	setcycle 3 Number_of_disks 3
+	setcycle 3 Number_of_locations 6
+	setcycle 4 Disk_size 7
+	setcycle 4 Eccentricity 150
+	setcycle 4 Number_of_disks 3
+	setcycle 4 Number_of_locations 6
+	setcycle 5 Disk_size 9
+	setcycle 5 Eccentricity 150
+	setcycle 5 Number_of_disks 3
+	setcycle 5 Number_of_locations 6
+	setcycle 6 Disk_size 5
+	setcycle 6 Eccentricity 200
+	setcycle 6 Number_of_disks 5
+	setcycle 6 Number_of_locations 6
+	setcycle 7 Disk_size 7
+	setcycle 7 Eccentricity 200
+	setcycle 7 Number_of_disks 5
+	setcycle 7 Number_of_locations 6
+	setcycle 8 Disk_size 9
+	setcycle 8 Eccentricity 200
+	setcycle 8 Number_of_disks 5
+	setcycle 8 Number_of_locations 6
+	setcycle 9 Disk_size 5
+	setcycle 9 Eccentricity 150
+	setcycle 9 Number_of_disks 5
+	setcycle 9 Number_of_locations 6
+	setcycle 10 Disk_size 7
+	setcycle 10 Eccentricity 150
+	setcycle 10 Number_of_disks 5
+	setcycle 10 Number_of_locations 6
+	setcycle 11 Disk_size 9
+	setcycle 11 Eccentricity 150
+	setcycle 11 Number_of_disks 5
+	setcycle 11 Number_of_locations 6
+	setcycle 12 Disk_size 5
+	setcycle 12 Eccentricity 200
+	setcycle 12 Number_of_disks 3
+	setcycle 12 Number_of_locations 9
+	setcycle 13 Disk_size 7
+	setcycle 13 Eccentricity 200
+	setcycle 13 Number_of_disks 3
+	setcycle 13 Number_of_locations 9
+	setcycle 14 Disk_size 9
+	setcycle 14 Eccentricity 200
+	setcycle 14 Number_of_disks 3
+	setcycle 14 Number_of_locations 9
+	setcycle 15 Disk_size 5
+	setcycle 15 Eccentricity 150
+	setcycle 15 Number_of_disks 3
+	setcycle 15 Number_of_locations 9
+	setcycle 16 Disk_size 7
+	setcycle 16 Eccentricity 150
+	setcycle 16 Number_of_disks 3
+	setcycle 16 Number_of_locations 9
+	setcycle 17 Disk_size 9
+	setcycle 17 Eccentricity 150
+	setcycle 17 Number_of_disks 3
+	setcycle 17 Number_of_locations 9
+	setcycle 18 Disk_size 5
+	setcycle 18 Eccentricity 200
+	setcycle 18 Number_of_disks 5
+	setcycle 18 Number_of_locations 9
+	setcycle 19 Disk_size 7
+	setcycle 19 Eccentricity 200
+	setcycle 19 Number_of_disks 5
+	setcycle 19 Number_of_locations 9
+	setcycle 20 Disk_size 9
+	setcycle 20 Eccentricity 200
+	setcycle 20 Number_of_disks 5
+	setcycle 20 Number_of_locations 9
+	setcycle 21 Disk_size 5
+	setcycle 21 Eccentricity 150
+	setcycle 21 Number_of_disks 5
+	setcycle 21 Number_of_locations 9
+	setcycle 22 Disk_size 7
+	setcycle 22 Eccentricity 150
+	setcycle 22 Number_of_disks 5
+	setcycle 22 Number_of_locations 9
+	setcycle 23 Disk_size 9
+	setcycle 23 Eccentricity 150
+	setcycle 23 Number_of_disks 5
+	setcycle 23 Number_of_locations 9
+	setcycle 24 Disk_size 5
+	setcycle 24 Eccentricity 200
+	setcycle 24 Number_of_disks 3
+	setcycle 24 Number_of_locations 12
+	setcycle 25 Disk_size 7
+	setcycle 25 Eccentricity 200
+	setcycle 25 Number_of_disks 3
+	setcycle 25 Number_of_locations 12
+	setcycle 26 Disk_size 9
+	setcycle 26 Eccentricity 200
+	setcycle 26 Number_of_disks 3
+	setcycle 26 Number_of_locations 12
+	setcycle 27 Disk_size 5
+	setcycle 27 Eccentricity 150
+	setcycle 27 Number_of_disks 3
+	setcycle 27 Number_of_locations 12
+	setcycle 28 Disk_size 7
+	setcycle 28 Eccentricity 150
+	setcycle 28 Number_of_disks 3
+	setcycle 28 Number_of_locations 12
+	setcycle 29 Disk_size 9
+	setcycle 29 Eccentricity 150
+	setcycle 29 Number_of_disks 3
+	setcycle 29 Number_of_locations 12
+	setcycle 30 Disk_size 5
+	setcycle 30 Eccentricity 200
+	setcycle 30 Number_of_disks 5
+	setcycle 30 Number_of_locations 12
+	setcycle 31 Disk_size 7
+	setcycle 31 Eccentricity 200
+	setcycle 31 Number_of_disks 5
+	setcycle 31 Number_of_locations 12
+	setcycle 32 Disk_size 9
+	setcycle 32 Eccentricity 200
+	setcycle 32 Number_of_disks 5
+	setcycle 32 Number_of_locations 12
+	setcycle 33 Disk_size 5
+	setcycle 33 Eccentricity 150
+	setcycle 33 Number_of_disks 5
+	setcycle 33 Number_of_locations 12
+	setcycle 34 Disk_size 7
+	setcycle 34 Eccentricity 150
+	setcycle 34 Number_of_disks 5
+	setcycle 34 Number_of_locations 12
+	setcycle 35 Disk_size 9
+	setcycle 35 Eccentricity 150
+	setcycle 35 Number_of_disks 5
+	setcycle 35 Number_of_locations 12
+	setcycle 36 Disk_size 5
+	setcycle 36 Eccentricity 200
+	setcycle 36 Number_of_disks 3
+	setcycle 36 Number_of_locations 15
+	setcycle 37 Disk_size 7
+	setcycle 37 Eccentricity 200
+	setcycle 37 Number_of_disks 3
+	setcycle 37 Number_of_locations 15
+	setcycle 38 Disk_size 9
+	setcycle 38 Eccentricity 200
+	setcycle 38 Number_of_disks 3
+	setcycle 38 Number_of_locations 15
+	setcycle 39 Disk_size 5
+	setcycle 39 Eccentricity 150
+	setcycle 39 Number_of_disks 3
+	setcycle 39 Number_of_locations 15
+	setcycle 40 Disk_size 7
+	setcycle 40 Eccentricity 150
+	setcycle 40 Number_of_disks 3
+	setcycle 40 Number_of_locations 15
+	setcycle 41 Disk_size 9
+	setcycle 41 Eccentricity 150
+	setcycle 41 Number_of_disks 3
+	setcycle 41 Number_of_locations 15
+	setcycle 42 Disk_size 5
+	setcycle 42 Eccentricity 200
+	setcycle 42 Number_of_disks 5
+	setcycle 42 Number_of_locations 15
+	setcycle 43 Disk_size 7
+	setcycle 43 Eccentricity 200
+	setcycle 43 Number_of_disks 5
+	setcycle 43 Number_of_locations 15
+	setcycle 44 Disk_size 9
+	setcycle 44 Eccentricity 200
+	setcycle 44 Number_of_disks 5
+	setcycle 44 Number_of_locations 15
+	setcycle 45 Disk_size 5
+	setcycle 45 Eccentricity 150
+	setcycle 45 Number_of_disks 5
+	setcycle 45 Number_of_locations 15
+	setcycle 46 Disk_size 7
+	setcycle 46 Eccentricity 150
+	setcycle 46 Number_of_disks 5
+	setcycle 46 Number_of_locations 15
+	setcycle 47 Disk_size 9
+	setcycle 47 Eccentricity 150
+	setcycle 47 Number_of_disks 5
+	setcycle 47 Number_of_locations 15
+	setcycle 48 Disk_size 5
+	setcycle 48 Eccentricity 200
+	setcycle 48 Number_of_disks 3
+	setcycle 48 Number_of_locations 18
+	setcycle 49 Disk_size 7
+	setcycle 49 Eccentricity 200
+	setcycle 49 Number_of_disks 3
+	setcycle 49 Number_of_locations 18
+	setcycle 50 Disk_size 9
+	setcycle 50 Eccentricity 200
+	setcycle 50 Number_of_disks 3
+	setcycle 50 Number_of_locations 18
+	setcycle 51 Disk_size 5
+	setcycle 51 Eccentricity 150
+	setcycle 51 Number_of_disks 3
+	setcycle 51 Number_of_locations 18
+	setcycle 52 Disk_size 7
+	setcycle 52 Eccentricity 150
+	setcycle 52 Number_of_disks 3
+	setcycle 52 Number_of_locations 18
+	setcycle 53 Disk_size 9
+	setcycle 53 Eccentricity 150
+	setcycle 53 Number_of_disks 3
+	setcycle 53 Number_of_locations 18
+	setcycle 54 Disk_size 5
+	setcycle 54 Eccentricity 200
+	setcycle 54 Number_of_disks 5
+	setcycle 54 Number_of_locations 18
+	setcycle 55 Disk_size 7
+	setcycle 55 Eccentricity 200
+	setcycle 55 Number_of_disks 5
+	setcycle 55 Number_of_locations 18
+	setcycle 56 Disk_size 9
+	setcycle 56 Eccentricity 200
+	setcycle 56 Number_of_disks 5
+	setcycle 56 Number_of_locations 18
+	setcycle 57 Disk_size 5
+	setcycle 57 Eccentricity 150
+	setcycle 57 Number_of_disks 5
+	setcycle 57 Number_of_locations 18
+	setcycle 58 Disk_size 7
+	setcycle 58 Eccentricity 150
+	setcycle 58 Number_of_disks 5
+	setcycle 58 Number_of_locations 18
+	setcycle 59 Disk_size 9
+	setcycle 59 Eccentricity 150
+	setcycle 59 Number_of_disks 5
+	setcycle 59 Number_of_locations 18
+	setcycle 60 Disk_size 5
+	setcycle 60 Eccentricity 200
+	setcycle 60 Number_of_disks 3
+	setcycle 60 Number_of_locations 21
+	setcycle 61 Disk_size 7
+	setcycle 61 Eccentricity 200
+	setcycle 61 Number_of_disks 3
+	setcycle 61 Number_of_locations 21
+	setcycle 62 Disk_size 9
+	setcycle 62 Eccentricity 200
+	setcycle 62 Number_of_disks 3
+	setcycle 62 Number_of_locations 21
+	setcycle 63 Disk_size 5
+	setcycle 63 Eccentricity 150
+	setcycle 63 Number_of_disks 3
+	setcycle 63 Number_of_locations 21
+	setcycle 64 Disk_size 7
+	setcycle 64 Eccentricity 150
+	setcycle 64 Number_of_disks 3
+	setcycle 64 Number_of_locations 21
+	setcycle 65 Disk_size 9
+	setcycle 65 Eccentricity 150
+	setcycle 65 Number_of_disks 3
+	setcycle 65 Number_of_locations 21
+	setcycle 66 Disk_size 5
+	setcycle 66 Eccentricity 200
+	setcycle 66 Number_of_disks 5
+	setcycle 66 Number_of_locations 21
+	setcycle 67 Disk_size 7
+	setcycle 67 Eccentricity 200
+	setcycle 67 Number_of_disks 5
+	setcycle 67 Number_of_locations 21
+	setcycle 68 Disk_size 9
+	setcycle 68 Eccentricity 200
+	setcycle 68 Number_of_disks 5
+	setcycle 68 Number_of_locations 21
+	setcycle 69 Disk_size 5
+	setcycle 69 Eccentricity 150
+	setcycle 69 Number_of_disks 5
+	setcycle 69 Number_of_locations 21
+	setcycle 70 Disk_size 7
+	setcycle 70 Eccentricity 150
+	setcycle 70 Number_of_disks 5
+	setcycle 70 Number_of_locations 21
+	setcycle 71 Disk_size 9
+	setcycle 71 Eccentricity 150
+	setcycle 71 Number_of_disks 5
+	setcycle 71 Number_of_locations 21
+	run trial_sequence
+
+define sequence block_sequence
+	set flush_keyboard yes
+	set description "A sequence containing a single block of trials followed by feedback to the participant"
+	run reset_feedback always
+	run block_loop always
+	run feedback always
+
+define inline_script defined_functions
+	set description "Executes Python code"
+	set _run ""
+	___prepare__
+	import numpy as np
+	import math 
+	import random
+	
+	
+	def calulateCirclePosition(x,y,r,setsize):
+		canvasCircle = self.offline_canvas()
+		angleSegment = 2* pi /setsize
+		circlePositions =[]
+		for i in range(0,setsize):
+			x = r * cos(i*angleSegment) #+ canvasCircle.xcenter() #in opensesame3, center is (0,0)
+			y = r * sin(i*angleSegment) #+ canvasCircle.ycenter()
+			circlePositions.append((x,y))
+		return circlePositions
+	
+	#Radial
+	def computeRadialDiskCoordinate(x, y, location): #location: how far it from the central disk location == 1, 2, 3, 4
+	   
+		xo = x * (eccentricity+distance_disk*location)/eccentricity
+		yo = y * (eccentricity+distance_disk*location)/eccentricity
+		xi = x * (eccentricity-distance_disk*location)/eccentricity
+		yi = y * (eccentricity-distance_disk*location)/eccentricity
+	
+		radial_xy_dic = {"i":[xi, yi],"o":[xo, yo]}
+		
+		return radial_xy_dic
+	#tangential
+	def computeTangentialDiskCoordinate (x, y,  location):
+	 
+		xl = x + (y * (eccentricity+distance_disk*location)/eccentricity) - y
+		yl = x - (x * (eccentricity+distance_disk*location)/eccentricity) + y
+		xr = x + y - (y * (eccentricity+distance_disk*location)/eccentricity)
+		yr = (x * (eccentricity+distance_disk*location)/eccentricity) - x + y
+		
+		tan_xy_dic = {"l": [xl, yl], "r": [xr, yr]}
+		return tan_xy_dic
+	__end__
+
+define sketchpad end_of_experiment
+	set start_response_interval no
+	set duration keypress
+	set description "A sketchpad notifying the participant that the experiment is finished"
+	draw textline center=1 color=white font_bold=no font_family=mono font_italic=no font_size=18 html=yes show_if=always text="Press any key to exit" x=0 y=0 z_index=0
+
+define sketchpad end_of_practice
+	set start_response_interval no
+	set duration keypress
+	set description "A sketchpad notifying the participant that the practice phase is finished"
+	draw textline center=1 color=white font_bold=no font_family=mono font_italic=no font_size=18 html=yes show_if=always text="Press any key to continue" x=0 y=0 z_index=0
+
+define sequence experiment
+	set flush_keyboard yes
+	set description "The main sequence of the experiment"
+	run instructions always
+	run defined_functions always
+	run practice_loop always
+	run end_of_practice always
+	run experimental_loop always
+	run end_of_experiment always
+
+define loop experimental_loop
+	set source_file ""
+	set source table
+	set skip 0
+	set repeat 1
+	set order random
+	set offset no
+	set item block_sequence
+	set description "A loop containing one or more experimental blocks"
+	set cycles 1
+	set continuous no
+	set column_order practice
+	set break_if_on_first yes
+	set break_if never
+	setcycle 0 practice no
+	run block_sequence
+
+define feedback feedback
+	set reset_variables yes
+	set duration keypress
+	set description "Provides feedback to the participant"
+	draw textline center=1 color=white font_bold=no font_family=mono font_italic=no font_size=18 html=yes show_if=always text="Your average response time was [avg_rt]ms<br /><br />Your accuracy was [acc]%<br /><br />Press any key to continue" x=0 y=0 z_index=0
+
+define sketchpad instructions
+	set start_response_interval no
+	set duration keypress
+	set description "A sketchpad containing the instructions for the participant"
+	draw textline center=1 color="#000000" font_bold=no font_family=mono font_italic=no font_size=18 html=yes show_if=always text="Press any key to begin!" x=0 y=0 z_index=0
+
+define keyboard_response keyboard_response
+	set timeout infinite
+	set flush yes
+	set event_type keypress
+	set duration keypress
+	set description "Collects keyboard responses"
+
+define logger logger
+	set description "Logs experimental data"
+	set auto_log yes
+
+define advanced_delay new_advanced_delay
+	set jitter_mode Uniform
+	set jitter 0
+	set duration 1000
+	set description "Waits for a specified duration"
+
+define coroutines new_coroutines
+	set function_name ""
+	set flush_keyboard yes
+	set end_after_item ""
+	set duration 5000
+	set description "Run items simultaneously"
+
+define logger new_logger
+	set description "Logs experimental data"
+	set auto_log yes
+
+define pygaze_drift_correct new_pygaze_drift_correct
+	set ypos 0
+	set xpos 0
+	set target_style default
+	set target_color "[foreground]"
+	set fixation_triggered no
+	set draw_target yes
+	set description "Perform eye-tracker drift correction"
+
+define repeat_cycle new_repeat_cycle
+	set description "Optionally repeat a cycle from a loop"
+	set condition never
+
+define loop practice_loop
+	set source_file ""
+	set source table
+	set skip 0
+	set repeat 1
+	set order random
+	set offset no
+	set item block_sequence
+	set description "A loop containing one or more practice blocks"
+	set cycles 1
+	set continuous no
+	set column_order practice
+	set break_if_on_first yes
+	set break_if never
+	setcycle 0 practice yes
+	run block_sequence
+
+define reset_feedback reset_feedback
+	set description "Resets the feedback variables, such as 'avg_rt' and 'acc'"
+
+define inline_script show_stimuli
+	set description "Executes Python code"
+	___run__
+	my_canvas.show()
+	__end__
+	___prepare__
+	import numpy as np
+	import math 
+	import random
+	from math import pi, cos, sin
+	
+	#some parameters
+	my_canvas = self.offline_canvas()
+	xc = 0#my_canvas.xcenter() 512? in opensesame 3, the center is 0,0
+	yc = 0#my_canvas.ycenter() 384?
+	disk_pixel =10
+	
+	#get independent variables from block loop
+	eccentricity = 150 #exp.get("Eccentricity")  #in pixel e=7° 7,5
+	N_of_disks = 3 #exp.get("Number_of_disks") #3， 5
+	disk_size = 7 #exp.get("Disk_size") # 5,7,9
+	N_of_locations = 11#exp.get("Number_of_locations") # 6, 9, 12, 15, 18, 21; locations on the imaginary circle
+	crowding_zone = eccentricity/2
+	condition =  "tangential" #"radial"  #"
+	distance_disk = 20
+	
+	'''
+	#Experiment 1			
+	#------------------------------------------------------------------------------------------------------------------
+	# Dot Cloud 
+	#------------------------------------------------------------------------------------------------------------------
+	
+	# Dots possible positions in a 10*10 grid
+	grid_dimension = 10   		# One dimension of the grid
+	linelength = 100		 	# Distance between grid positions
+	
+	#start_x = my_canvas.xcenter() - 0.5*linelength*grid_dimension + 0.5*linelength 	#leftmost x
+	#start_y = my_canvas.ycenter() - 0.5*linelength*grid_dimension + 0.5*linelength 	#topmost y
+	
+	start_x = xc - 0.5*linelength*grid_dimension + 0.5*linelength 	#leftmost x
+	start_y = yc - 0.5*linelength*grid_dimension + 0.5*linelength 	#topmost y
+	
+	gridpositions = []	#Empty list to store grid positions in
+	
+	for x_count in range(0,grid_dimension):					# Loops 10 times for each with values [0,1,2,3,4] for x_count
+		current_x = start_x + x_count*linelength			# Calculate x of current column of the grid (using x_count to indicate column)
+		for y_count in range(0,grid_dimension):				# For each x_count, loops 10 times with values [0,1,2,3,4] for y_count
+			current_y = start_y + y_count*linelength		# Calculate y of current row of the grid (using y_count to indicate row)
+			gridpositions.append( (current_x, current_y) )	# Store calculated grid position in list
+	
+	#fixation dot
+	my_canvas.fixdot(0, 0, style = u'small-filled') #(x=xc, y=yc,style=u'small-filled')
+	
+	# some conditions to set
+	N_dot = 20
+	# show dot cloud stimuli
+	
+	taken_posi = []
+	for i in range (0, 20):
+		dot_position = random.choice(gridpositions)
+		while dot_position in taken_posi:
+			dot_position = random.choice(gridpositions)
+			
+		my_canvas.circle(dot_position[0],dot_position[1],disk_size, fill = True, color = 'black')
+		taken_posi.append(dot_position)
+		
+		#print taken_posi
+		
+	'''
+	
+	#Experiment N
+	#--------------------------------------------------------------------------------------------------------------
+	# Cluttered 
+	#--------------------------------------------------------------------------------------------------------------
+	
+	#fixation dot
+	my_canvas.fixdot(0, 0, style = u'small-filled') #(x=xc, y=yc,style=u'small-filled')
+	
+	#some conditions to set
+	vary_disk_distance = "no" #whether distances between disks vary within trial
+	
+	#show stimuli
+	
+	#target_disk 
+	imaginary_circle_position_c = calulateCirclePosition(xc, yc, eccentricity, N_of_locations)
+	
+	for i in range(0,N_of_locations):
+		x0 = imaginary_circle_position_c[i][0]#central disk x
+		y0 = imaginary_circle_position_c[i][1]#central disk y	
+	
+		#get radial positions dictionary  radial_xy_dic = {"i":[xi, yi],"o":[xo, yo]}
+		radial_xy_1 = computeRadialDiskCoordinate(x0, y0, 1)
+		radial_xy_2 = computeRadialDiskCoordinate(x0, y0, 2)
+		radial_xy_3 = computeRadialDiskCoordinate(x0, y0, 3)
+		radial_xy_4 = computeRadialDiskCoordinate(x0, y0, 4)
+	
+		#get tangential positon dictionary  tan_xy_dic = {"l": [xl, yl], "r": [xr, yr]}
+		tan_xy_1 = computeTangentialDiskCoordinate(x0, y0, 1)
+		tan_xy_2 = computeTangentialDiskCoordinate(x0, y0, 2)
+		tan_xy_3 = computeTangentialDiskCoordinate(x0, y0, 3)
+		tan_xy_4 = computeTangentialDiskCoordinate(x0, y0, 4)
+	
+		#print(radial_xy_1['i'][0], tan_xy_1["l"][1])
+		if condition == "radial":
+			if vary_disk_distance== "no":
+				if N_of_disks == 3:			
+					
+					
+					my_canvas.circle(x0, y0, disk_size, fill = True, color = 'black')
+					my_canvas.circle(radial_xy_1["i"][0], radial_xy_1["i"][1], disk_size, fill = True, color = 'black')
+					my_canvas.circle(radial_xy_1["o"][0],radial_xy_1["o"][1], disk_size, fill = True, color = 'black')			
+				elif N_of_disks == 5:
+					my_canvas.circle(x0, y0, disk_size, fill = True, color = 'black')
+					my_canvas.circle(radial_xy_1["i"][0], radial_xy_1["i"][1], disk_size, fill = True, color = 'black')
+					my_canvas.circle(radial_xy_1["o"][0],radial_xy_1["o"][1], disk_size, fill = True, color = 'black')
+					my_canvas.circle(radial_xy_2["i"][0], radial_xy_2["i"][1], disk_size, fill = True, color = 'black')
+					my_canvas.circle(radial_xy_2["o"][0],radial_xy_2["o"][1], disk_size, fill = True, color = 'black')
+					#my_canvas.circle(xi2, yi2, disk_size, fill = True, color = 'white')
+					#my_canvas.circle(xo2, yo2,disk_size, fill = True, color = 'white')
+				else:
+					my_canvas.circle(x0, y0, disk_size, fill = True, color = 'black')
+			#else: # vary_disk_distance within trails == yes					
+		else: #tangential condition
+		
+			if N_of_disks == 3:
+				my_canvas.circle(x0, y0, disk_size, fill = True, color = 'black')
+				my_canvas.circle(tan_xy_1["r"][0],tan_xy_1["r"][1], disk_size, fill = True, color = 'black')
+				my_canvas.circle(tan_xy_1["l"][0],tan_xy_1["l"][1],  disk_size, fill = True, color = 'black')			
+			elif N_of_disks == 5:
+				my_canvas.circle(x0, y0, disk_size, fill = True, color = 'black')
+				my_canvas.circle(tan_xy_1["r"][0],tan_xy_1["r"][1], disk_size, fill = True, color = 'black')
+				my_canvas.circle(tan_xy_1["l"][0],tan_xy_1["l"][1],  disk_size, fill = True, color = 'black')
+				my_canvas.circle(tan_xy_2["r"][0],tan_xy_2["r"][1], disk_size, fill = True, color = 'black')
+				my_canvas.circle(tan_xy_2["l"][0],tan_xy_2["l"][1],  disk_size, fill = True, color = 'black')
+				#my_canvas.circle(x12, y12, disk_size, fill = True, color = 'white')
+				#my_canvas.circle(x22, y22,disk_size, fill = True, color = 'white')
+	__end__
+
+define sketchpad sketchpad
+	set start_response_interval no
+	set duration 0
+	set description "Displays stimuli"
+	draw fixdot color=white show_if=always style=default x=0 y=0 z_index=0
+
+define sequence trial_sequence
+	set flush_keyboard yes
+	set description "A single trial"
+	run show_stimuli always
+	run keyboard_response always
+	run logger always
+
