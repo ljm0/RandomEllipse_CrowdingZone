@@ -20,6 +20,7 @@ import matplotlib.pyplot as plt
 from shapely.geometry.polygon import LinearRing
 from math import atan2, pi
 from matplotlib.patches import Ellipse
+import sys
 
 #some variables
 disk_radius = 0.2
@@ -50,7 +51,7 @@ try:
 except ValueError:
     pass
     
-random.shuffle(positions)
+#random.shuffle(positions)
 
 
 
@@ -116,12 +117,19 @@ def ellipse_polyline_intersection(ellipses, n=100):
     mp = ea.intersection(eb)
     #intersectionX, intersectionY are the intersections
 #    if type(mp) == types.GeneratorType:
-    print(mp.geom_type)
-    print(mp)
+#    print("ea:",ea)
+#    print("eb:",eb)
+#    print("mp:",mp)
     if mp.geom_type == 'Point':
         print(mp.geom_type)
         print(mp.x)
         return [mp.x], [mp.y]
+    elif mp.geom_type == 'LineString':
+        newmp = list(mp.coords)
+        print("newmp", newmp)
+        intersectionX = [pE[0] for pE in newmp] 
+        intersectionY = [pE[1] for pE in newmp]
+        return intersectionX, intersectionY
     else:
         intersectionX = [pE.x for pE in mp] 
         intersectionY = [pE.y for pE in mp]
