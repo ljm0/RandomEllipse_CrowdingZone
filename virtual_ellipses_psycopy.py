@@ -30,8 +30,10 @@ disk_radius = 1
 #N_disks = 33
 
 # a list of posible positions
-grid_dimention_x = 152
-grid_dimention_y = 84
+# grid_dimention_x = 152
+# grid_dimention_y = 84
+grid_dimention_x = 30
+grid_dimention_y = 30
 
 
 win = visual.Window((1024, 768), units='pix', fullscr=False)
@@ -65,27 +67,29 @@ except ValueError:
 print("len0:", len(positions))
 
 # TODO Define a fovea area
-r = 50
+r = 100
 
 del_p = []
 for tempP in positions:
     if math.sqrt(tempP[0]**2 + tempP[1]**2) < r:
-        
         #positions.remove(tempP)
         del_p.append(tempP)
-    
-        
-# for points in del_p:
-#     plt.plot(points[0], points[1], 'ro')
-# plt.show()
-
+        # for points in del_p:
+        #     plt.plot(points[0], points[1], 'ro')
+        # plt.show()
         try:
-            print ("del_p:", del_p)
             positions.remove(tempP)
         except ValueError:
             pass
 
-            
+print ("del_p:", del_p)
+for points in del_p:
+    plt.plot(points[0], points[1], 'ro')
+plt.show()
+print ("positions: ===============================", positions)
+for points in positions:
+    plt.plot(points[0], points[1], 'ro')
+plt.show()
 #random.shuffle(positions)
 print("len1:",len(positions))
 #sys.exit()
@@ -161,12 +165,12 @@ def ellipse_polyline_intersection(ellipses, n=100):
     #print(mp.geom_type)
     #print(mp)
     if mp.geom_type == 'Point':
-        print(mp.geom_type)
-        print(mp.x)
+        # print(mp.geom_type)
+        # print(mp.x)
         return [mp.x], [mp.y]
     elif mp.geom_type == 'LineString':
         newmp = list(mp.coords)
-        print("newmp", newmp)
+        # print("newmp", newmp)
         intersectionX = [pE[0] for pE in newmp] 
         intersectionY = [pE[1] for pE in newmp]
         return intersectionX, intersectionY
@@ -264,13 +268,13 @@ def caclulateNewList (random_disk_coordinate, taken_list): # (新生成的随机
             time_if2 = time_if2 + (t4-t2)
             continue
         '''
-    print ("forNumber: ", for_number)
+    # print ("forNumber: ", for_number)
     t4 = time.time()
     
-    print ("TotalcheckForLoop: ", (t4-t0)) 
-    print ("checkSentence:", time_sen)
-    print ("checkTakenlist_if: ", time_if)
-    print ("checkTakenlist_if2: ", time_if2)
+    # print ("TotalcheckForLoop: ", (t4-t0)) 
+    # print ("checkSentence:", time_sen)
+    # print ("checkTakenlist_if: ", time_if)
+    # print ("checkTakenlist_if2: ", time_if2)
     
     taken_list.append(random_disk_coordinate)
     #delete the the current position from the list positions and the corrosponding ellipses points.
@@ -311,21 +315,21 @@ while len(positions) > 0:
 
     
     #taken_posi.append(disk_posi_new)
-    print("taken posi: ", taken_posi, "length of positions: ", len(positions))
+    # print("taken posi: ", taken_posi, "length of positions: ", len(positions))
     t_define1 = time.time()
     new_list = caclulateNewList(disk_posi_new,taken_posi) 
     t_define2 = time.time()
     
     t_define_d = t_define2 - t_define1
-    print ("Time_function: ", t_define_d)
+    # print ("Time_function: ", t_define_d)
     while_number = while_number + 1
     #delete the position
     '''  
     if len(new_list) > N_disks:
         break  #final list of position I want
     '''
-print("whileNumber: ", while_number)
-print ("new", new_list)
+# print("whileNumber: ", while_number)
+# print ("new", new_list)
 
 
 def drawEllipse (e_posi): 
@@ -365,7 +369,7 @@ plt.show()
 for i in range(len(taken_posi)):
     
     trgt_disk.setPos(taken_posi[i]) 
-    print("i", taken_posi[i])
+    # print("i", taken_posi[i])
     trgt_disk.draw()
 win.flip()
 
