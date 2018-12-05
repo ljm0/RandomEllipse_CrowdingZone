@@ -4,10 +4,12 @@ Created on Sun Nov 18 16:36:16 2018
 
 @author: Miao
 This scrip :
+    0. Run under psychopy environment
     1. define posible positins of disks
     2. define virtual ellipse with 3 parameters, coordinate, ka and kb
     3. check a postion is in/outside an ellipse
-    4*. return a list contains a group of positions that the corresponding virtual ellipses never overlap 
+    4. return a list contains a group of positions that the corresponding virtual ellipses never overlap
+    5. visualized the results 
     
 """
 import numpy as np 
@@ -26,17 +28,18 @@ from psychopy.constants import (NOT_STARTED, STARTED, PLAYING, PAUSED,
 
 import sys
 #some variables
-disk_radius = 1
+disk_radius = 5
 #N_disks = 33
 
 # a list of posible positions
-# grid_dimention_x = 152
-# grid_dimention_y = 84
-grid_dimention_x = 30
-grid_dimention_y = 30
+grid_dimention_x = 152
+grid_dimention_y = 84
+# grid_dimention_x = 30
+# grid_dimention_y = 30
 
 
 win = visual.Window((1024, 768), units='pix', fullscr=False)
+#win = visual.Window((1024, 768), units='pix', fullscr=True)
 
 # fixation 
 text_msg = visual.TextStim(win, text='message',color=(-1.0, -1.0, -1.0))
@@ -59,39 +62,39 @@ for x_count in range(0, grid_dimention_x):
         positions.append((new_x, new_y))       
         
 #(0, 0) could not be in the positions list
+
 try:
     positions.remove((0,0))
 except ValueError:
     pass
 
-print("len0:", len(positions))
+# print("len0:", len(positions))
+# print("position", positions)
 
-# TODO Define a fovea area
-r = 100
+# TODO Define a fovea area. 
+# r = 10
+r = 200
 
 del_p = []
+tempList = positions.copy()
 for tempP in positions:
-    if math.sqrt(tempP[0]**2 + tempP[1]**2) < r:
-        #positions.remove(tempP)
+    if math.sqrt((tempP[0]**2) + (tempP[1]**2)) < r:
         del_p.append(tempP)
-        # for points in del_p:
-        #     plt.plot(points[0], points[1], 'ro')
-        # plt.show()
         try:
-            positions.remove(tempP)
+            tempList.remove(tempP)
         except ValueError:
             pass
-
-print ("del_p:", del_p)
+positions = tempList
+#print ("del_p:", del_p)
 for points in del_p:
     plt.plot(points[0], points[1], 'ro')
 plt.show()
-print ("positions: ===============================", positions)
+#print ("positions: ===============================", positions)
 for points in positions:
     plt.plot(points[0], points[1], 'ro')
 plt.show()
-#random.shuffle(positions)
-print("len1:",len(positions))
+random.shuffle(positions)
+#print("len1:",len(positions))
 #sys.exit()
 
 #target disk
@@ -161,7 +164,7 @@ def ellipse_polyline_intersection(ellipses, n=100):
     eb = LinearRing(ellipseB)
     mp = ea.intersection(eb)
     #intersectionX, intersectionY are the intersections
-#    if type(mp) == types.GeneratorType:
+    #if type(mp) == types.GeneratorType:
     #print(mp.geom_type)
     #print(mp)
     if mp.geom_type == 'Point':
@@ -194,8 +197,6 @@ def ellipse_polyline_intersection(ellipses, n=100):
 ellipses = [(1, 1, 1.5, 1.8, 90), (2, 0.5, 5, 1.5, -180)]
 intersectionX, intersectionY = ellipse_polyline_intersection(ellipses)
 '''
-
-
 
 #the virtual ellipses of the first disk
 #virtual_e_radius = defineVirtualEllipses(disk_posi)[1] 
@@ -268,7 +269,7 @@ def caclulateNewList (random_disk_coordinate, taken_list): # (新生成的随机
             time_if2 = time_if2 + (t4-t2)
             continue
         '''
-    # print ("forNumber: ", for_number)
+    print ("forNumber: ", for_number)
     t4 = time.time()
     
     # print ("TotalcheckForLoop: ", (t4-t0)) 
@@ -309,7 +310,7 @@ taken_posi = [disk_posi]
 while_number = 0
 while len(positions) > 0: 
     
-    #the conditon to stop the while is blur
+#the conditon to stop the while is blur
 #for random_N in range(0, N_disks):   
     disk_posi_new = positions[0] 
 

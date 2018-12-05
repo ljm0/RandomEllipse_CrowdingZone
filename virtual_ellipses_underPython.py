@@ -4,11 +4,13 @@ Created on Sun Nov 18 16:36:16 2018
 
 @author: Miao
 This scrip :
+    0. Run under python environment
     1. define posible positins of disks
-    2. define virtual ellipse with 3 parameters, coordinate, ka and kb
-    3. check a postion is in/outside an ellipse
-    4*. return a list contains a group of positions that the corresponding virtual ellipses never overlap 
-    
+    2. vary the presentation window
+    3. define virtual ellipse with 3 parameters, coordinate, ka and kb
+    4. check a postion is in/outside an ellipse
+    5. return a list contains a group of positions that the corresponding virtual ellipses never overlap 
+    6. visuralized the results
 """
 import numpy as np 
 import math
@@ -20,45 +22,97 @@ import matplotlib.pyplot as plt
 from shapely.geometry.polygon import LinearRing
 from math import atan2, pi
 from matplotlib.patches import Ellipse
+#import sys
 
-#some variables
-disk_radius = 0.2
-#N_disks = 33
 
-# a list of posible positions
+# =============================================================================
+# Possible positions
+# =============================================================================
+
+'''a list of posible positions'''
 grid_dimention_x = 152
 grid_dimention_y = 84
-
-
+# grid_dimention_x = 30
+# grid_dimention_y = 30
 
 linelength = 10
 start_x = -0.5*linelength*grid_dimention_x + 0.5*linelength
 start_y = -0.5*linelength*grid_dimention_y + 0.5*linelength
 
-
-
-positions =[]    
+positions =[]
 for x_count in range(0, grid_dimention_x):
     new_x = start_x + x_count*linelength
     for y_count in range(0, grid_dimention_y):
         new_y = start_y + y_count*linelength
-        positions.append((new_x, new_y))       
-        
-#(0, 0) could not be in the positions list
+        positions.append((new_x, new_y))
+
+'''(0, 0) should not be in the positions list'''
 try:
     positions.remove((0,0))
 except ValueError:
     pass
-    
+
+# print("len0:", len(positions))
+# print("position", positions) 
+
+''' Define and remove a fovea area (a circle) of r ==??'''
+# r = 10
+r = 150
+del_p = []
+tempList = positions.copy()
+for tempP in positions:
+    if math.sqrt((tempP[0]**2) + (tempP[1]**2)) < r:
+        del_p.append(tempP)
+        try:
+            tempList.remove(tempP)
+        except ValueError:
+            pass
+positions = tempList
+#print ("del_p:", del_p)
+for points in del_p:
+    plt.plot(points[0], points[1], 'co')
+cx = plt.gca()
+cx.set_xlim([-800,800])
+cx.set_ylim([-500,500])
+plt.show()
+#print ("positions: ===============================", positions)
+for points in positions:
+    plt.plot(points[0], points[1], 'ro')
+dx = plt.gca()
+dx.set_xlim([-800,800])
+dx.set_ylim([-500,500])
+plt.show()  
 random.shuffle(positions)
+#print("len1:",len(positions))
+#sys.exit()
+
+'''define a smaller visual window (presentation area)'''
+newWindowSize = 0.6
+maxCorrdinate = max(positions)
+del_p2 = []
+tempList2 = positions.copy()
+for outPosi in positions:
+    if abs(outPosi[0]) > maxCorrdinate[0]*newWindowSize or abs(outPosi[1]) > maxCorrdinate[1]*newWindowSize:
+        del_p2.append(outPosi)
+        try:
+            tempList2.remove(outPosi)
+        except ValueError:
+            pass
+positions = tempList2
+
+for points in del_p2:
+    plt.plot(points[0], points[1], 'bo')
+plt.show()
+#sys.exit()
 
 
-
-def defineVirtualEllipses(coordinate, ka = 0.25, kb = 0.1): # parameter for a and b; 
-    '''This function defines the virtual ellipse. coordinate: the center of the ellipse
-       ka and kb are parameters of semi-major axis and semi-minor axis of the ellipse, respectivly.
-       ka and kb should be defined according to crowding zone areas. This function reutrns coordiante of ellipse(the center),
-       ellipse_axis(a and b for ellipse) and angle (radial direction)
+def defineVirtualEllipses(coordinate, ka = 0.25, kb = 0.1):
+# parameter for a and b; When adjust them, DO NOT forget to change in the drawEllipse
+    '''
+    This function defines the virtual ellipse. coordinate: the center of the ellipse
+    ka and kb are parameters of semi-major axis and semi-minor axis of the ellipse, respectivly.
+    ka and kb should be defined according to crowding zone areas. This function reutrns coordiante of ellipse(the center),
+    ellipse_axis(a and b for ellipse) and angle (radial direction)
     '''
     #t0 = time.time()
     e = distance.euclidean(coordinate, (0,0)) #np.sqrt((coordinate[0])**2 + (coordinate[1])**2)    
@@ -73,11 +127,9 @@ def defineVirtualEllipses(coordinate, ka = 0.25, kb = 0.1): # parameter for a an
     #print("defineVirtualEllipses", time1)
     return V_ellipse
 
-
 #first random disk
 disk_posi = positions[0] #random.choice(positions)
 positions.pop(0)
-
 
 def checkPosiOnEllipse( h, k, x, y, a, b):
     '''
@@ -91,7 +143,7 @@ def checkPosiOnEllipse( h, k, x, y, a, b):
     #print("checkPosiOnEllipse", time1)
     return p #if p<1, inside
    
-def ellipse_polyline_intersection(ellipses, n=100):
+def ellipse_polyline_intersection(ellipses, n=500):
     '''
     This function transfer an ellipse to ellipse_poluline and then check the intersections of two ellipses. It
     returns the intercetion coordinate 
@@ -119,12 +171,12 @@ def ellipse_polyline_intersection(ellipses, n=100):
     # print(mp.geom_type)
     # print(mp)
     if mp.geom_type == 'Point':
-        print(mp.geom_type)
-        print(mp.x)
+        #print(mp.geom_type)
+        #print(mp.x)
         return [mp.x], [mp.y]
     elif mp.geom_type == 'LineString':
         newmp = list(mp.coords)
-        print("newmp", newmp)
+        #print("newmp", newmp)
         intersectionX = [pE[0] for pE in newmp] 
         intersectionY = [pE[1] for pE in newmp]
         return intersectionX, intersectionY
@@ -132,8 +184,6 @@ def ellipse_polyline_intersection(ellipses, n=100):
         intersectionX = [pE.x for pE in mp] 
         intersectionY = [pE.y for pE in mp]
         return intersectionX, intersectionY
-#    else:
-#        return mp.x, mp.y
 #    try:
 #        #FIXME:TypeError: 'Point' object is not iterable
 #        intersectionX = [p.x for p in mp]
@@ -141,16 +191,14 @@ def ellipse_polyline_intersection(ellipses, n=100):
 #    except Exception as er:
 #        print('Error:', er)
 #        print("mp: ", mp)
-    #if you want to draw the two ellipse:
+#if you want to draw the two ellipse:
 #   plt.plot(intersectionX, intersectionY, "o")
 #   plt.plot(ellipseA[:, 0], ellipseA[:, 1])
 #   plt.plot(ellipseB[:, 0], ellipseB[:, 1])
 
-'''
-ellipses = [(1, 1, 1.5, 1.8, 90), (2, 0.5, 5, 1.5, -180)]
-intersectionX, intersectionY = ellipse_polyline_intersection(ellipses)
-'''
 
+#ellipses = [(1, 1, 1.5, 1.8, 90), (2, 0.5, 5, 1.5, -180)]
+#intersectionX, intersectionY = ellipse_polyline_intersection(ellipses)
 
 
 #the virtual ellipses of the first disk
@@ -165,11 +213,12 @@ virtual_e1 = defineVirtualEllipses(disk_posi)
 #virtual_e_radial_a = virtual_e_radial.hradius
 #virtual_e_radial_b = virtual_e_radial.vradius
 
-def caclulateNewList (random_disk_coordinate, taken_list): # (新生成的随机点，已经保存的点坐标list) # new random disk corrdinate, previous disk corrdinates list
-    '''This function generate the final list that contains a group of disks coordinate. 
-       The newly selected disk position (with a virtual ellipse) will be inspected with all the exited virtual ellipses
-       Only the one without intersection could be reutrned.
-       
+def caclulateNewList (random_disk_coordinate, taken_list): 
+    # (新生成的随机点，已经保存的点坐标list) # new random disk corrdinate, previous disk corrdinates list
+    '''
+    This function generate the final list that contains a group of disks coordinate. 
+    The newly selected disk position (with a virtual ellipse) will be inspected with all the exited virtual ellipses
+    Only the one without intersection could be reutrned.
     '''
     # tE1 = time.time()
     virtual_e_2 = defineVirtualEllipses(random_disk_coordinate)
@@ -182,16 +231,16 @@ def caclulateNewList (random_disk_coordinate, taken_list): # (新生成的随机
     
 
     for_number = 0
-    t0 = time.time()
-    time_sen = 0
-    time_if = 0
-    time_if2 = 0
+    #t0 = time.time()
+    #time_sen = 0
+    #time_if = 0
+    #time_if2 = 0
     for exist_n in range (len(taken_list)): 
-        t1 = time.time()
+        #t1 = time.time()
         exist_e = defineVirtualEllipses(taken_list[exist_n]) #perivous ellipses  
         ##exist_e = Ellipse(Point(taken_list[exist_n][0], taken_list[exist_n][1]), exist_e_radius[0],exist_e_radius[1])      
-        t2 = time.time()
-        time_sen = time_sen + (t2-t1)
+        #t2 = time.time()
+        #time_sen = time_sen + (t2-t1)
         for_number = for_number + 1
         
         ellipses = [exist_e, virtual_e_2]
@@ -206,31 +255,31 @@ def caclulateNewList (random_disk_coordinate, taken_list): # (新生成的随机
             continue
             
         
-        '''
-        if virtual_e_2.intersection(exist_e): 
-            ''''''
-            1. try to escape from sympy defined virtual ellipse.
-            2. if not
-                try to inspect all positions in (on) the virtual ellipse and check if two gorups of positions overlap
-            ''''''
-            #t3 = time.time()
-            #time_if = time_if + (t3-t2)
-            positions.pop(0)
-            t3 = time.time()
-            time_if = time_if + (t3-t2)
-            return [0] #breakout the function and  go into the while loop to delete this position
-        else:
-            t4 = time.time()
-            time_if2 = time_if2 + (t4-t2)
-            continue
-        '''
+
+#        if virtual_e_2.intersection(exist_e): 
+#            ''''''
+#            1. try to escape from sympy defined virtual ellipse.
+#            2. if not
+#                try to inspect all positions in (on) the virtual ellipse and check if two gorups of positions overlap
+#            ''''''
+#            #t3 = time.time()
+#            #time_if = time_if + (t3-t2)
+#            positions.pop(0)
+#            t3 = time.time()
+#            time_if = time_if + (t3-t2)
+#            return [0] #breakout the function and  go into the while loop to delete this position
+#        else:
+#            t4 = time.time()
+#            time_if2 = time_if2 + (t4-t2)
+#            continue
+
     print ("forNumber: ", for_number)
-    t4 = time.time()
+    #t4 = time.time()
     
-    print ("TotalcheckForLoop: ", (t4-t0)) 
-    print ("checkSentence:", time_sen)
-    print ("checkTakenlist_if: ", time_if)
-    print ("checkTakenlist_if2: ", time_if2)
+    #print ("TotalcheckForLoop: ", (t4-t0)) 
+    #print ("checkSentence:", time_sen)
+    # print ("checkTakenlist_if: ", time_if)
+    # print ("checkTakenlist_if2: ", time_if2)
     
     taken_list.append(random_disk_coordinate)
     #delete the the current position from the list positions and the corrosponding ellipses points.
@@ -265,30 +314,35 @@ taken_posi = [disk_posi]
 while_number = 0
 while len(positions) > 0: 
     
-    #the conditon to stop the while is blur
+#the conditon to stop the while is blur
 #for random_N in range(0, N_disks):   
     disk_posi_new = positions[0] 
 
     
     #taken_posi.append(disk_posi_new)
-    print("taken posi: ", taken_posi, "length of positions: ", len(positions))
+    #print("taken posi: ", taken_posi, "length of positions: ", len(positions))
     t_define1 = time.time()
     new_list = caclulateNewList(disk_posi_new,taken_posi) 
     t_define2 = time.time()
     
     t_define_d = t_define2 - t_define1
-    print ("Time_function: ", t_define_d)
+    #print ("Time_function: ", t_define_d)
     while_number = while_number + 1
     #delete the position
-    '''  
-    if len(new_list) > N_disks:
-        break  #final list of position I want
-    '''
-print("whileNumber: ", while_number)
-print ("new", new_list)
+
+#    if len(new_list) > N_disks:
+#        break  #final list of position I want
+
+# print("whileNumber: ", while_number)
+print ("taken_list", taken_posi)
 
 
 def drawEllipse (e_posi): 
+    """
+    This function allows to draw more than one ellipse. The parameter is 
+    a list of coordinate (must contain at least two coordinates)
+    The direction of ellipses are only radial direction,
+    """
     eccentricities = []
     for i in range(len(e_posi)):
         eccentricities0 = distance.euclidean(e_posi[i], (0,0))
@@ -310,7 +364,15 @@ def drawEllipse (e_posi):
         #e.set_alpha(np.random.rand())
         e.set_facecolor(np.random.rand(3))
         
-    ax.set_xlim(-500, 500)
+    ax.set_xlim(-800, 800)
     ax.set_ylim(-500, 500)
     plt.show()
 draw = drawEllipse(taken_posi)
+
+#see selected points
+for points in taken_posi:
+    plt.plot(points[0], points[1], 'ko')
+bx = plt.gca()
+bx.set_xlim([-800,800])
+bx.set_ylim([-500,500])
+plt.show()
