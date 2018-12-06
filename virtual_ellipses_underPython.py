@@ -232,8 +232,8 @@ def caclulateNewList (random_disk_coordinate, taken_list):
     ##virtual_e_radius_2 = virtual_e_2[1]
     
     for_number = 0
-    for exist_n in range (len(taken_list)): 
-        exist_e = defineVirtualEllipses(taken_list[exist_n]) #perivous ellipses  
+    for exist_n in taken_list: 
+        exist_e = defineVirtualEllipses(exist_n) #perivous ellipses  
         for_number = for_number + 1
         ellipses = [exist_e, virtual_e_2]
         intersectionXList, intersectionYList = ellipse_polyline_intersection(ellipses)
@@ -253,7 +253,7 @@ def caclulateNewList (random_disk_coordinate, taken_list):
 #            return [0] #breakout the function and  go into the while loop to delete this position
 #        else:
 #            continue
-    print ("forNumber: ", for_number)
+#    print ("forNumber: ", for_number)
     taken_list.append(random_disk_coordinate)
     #delete the the current position from the list positions and the corrosponding ellipses points.
     positions.pop(-1)
