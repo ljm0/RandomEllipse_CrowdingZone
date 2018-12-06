@@ -29,7 +29,7 @@ from matplotlib.patches import Ellipse
 # =============================================================================
 ka = 0.25 #The parameter of semi-major axis of ellipse
 kb = 0.1 #The parameter of semi-minor axis of ellipse
-r = 100 #The radius of protected fovea area
+r = 200 #The radius of protected fovea area
 newWindowSize = 0.8 #How much presentation area do we need?
 draw_ellipse = "radial"
 
@@ -60,12 +60,7 @@ try:
 except ValueError:
     pass
 
-# print("len0:", len(positions))
-# print("position", positions) 
-
 ''' Define and remove a fovea area (a circle) of r ==??'''
-# r = 10
-
 del_p = []
 tempList = positions.copy()
 for tempP in positions:
@@ -142,7 +137,6 @@ def defineVirtualEllipses(coordinate):
     ka and kb should be defined according to crowding zone areas. This function reutrns coordiante of ellipse(the center),
     ellipse_axis(a and b for ellipse) and 2 angles (radial and tangential direction)
     '''
-    #t0 = time.time()
     e = distance.euclidean(coordinate, (0,0)) #np.sqrt((coordinate[0])**2 + (coordinate[1])**2)    
     a = ka * e
     b = kb * e
@@ -152,9 +146,7 @@ def defineVirtualEllipses(coordinate):
     angle_radial = angle_rad*180/pi
     angle_tangential = angle_radial + 90
     V_ellipse = (coordinate[0],coordinate[1], ellipse_axis[0],ellipse_axis[1], angle_radial, angle_tangential)
-    #t1 = time.time()
-    #time1 = t1-t0
-    #print("defineVirtualEllipses", time1)
+
     return V_ellipse
 
 def checkPosiOnEllipse( h, k, x, y, a, b):
@@ -222,6 +214,7 @@ def ellipse_polyline_intersection(ellipses, n=500):
 #intersectionX, intersectionY = ellipse_polyline_intersection(ellipses)
 
 def caclulateNewList (random_disk_coordinate, taken_list): 
+    global positions
     # (新生成的随机点，已经保存的点坐标list) # new random disk corrdinate, previous disk corrdinates list
     '''
     This function generate the final list that contains a group of disks coordinate. 
@@ -229,7 +222,6 @@ def caclulateNewList (random_disk_coordinate, taken_list):
     Only the one without intersection could be reutrned.
     '''
     virtual_e_2 = defineVirtualEllipses(random_disk_coordinate)
-    ##virtual_e_radius_2 = virtual_e_2[1]
     
     for_number = 0
     for exist_n in taken_list: 
@@ -257,17 +249,18 @@ def caclulateNewList (random_disk_coordinate, taken_list):
     taken_list.append(random_disk_coordinate)
     #delete the the current position from the list positions and the corrosponding ellipses points.
     positions.pop(-1)
+    del_p3 =[]
+    tempList3 = positions.copy()
     for NPosition in positions:
         judge = checkPosiOnEllipse(random_disk_coordinate[0], random_disk_coordinate[1], NPosition[0],NPosition[1],virtual_e_2[2],virtual_e_2[3]) 
         if judge <= 1:
+            del_p3.append(NPosition)
             try:
-                positions.remove(NPosition)
+                tempList3.remove(del_p3)
             except ValueError:
                 pass
+    positions = tempList3
     return taken_list  #final list of position I want
-
-
-
 
 '''
 if new点和takenlist里的一个点相交
@@ -319,41 +312,16 @@ def drawEllipse (e_posi):
 disk_posi = positions[-1] #random.choice(positions)
 positions.pop(-1)
 
-
-#the virtual ellipses of the first disk
-#virtual_e_radius = defineVirtualEllipses(disk_posi)[1] 
-#virtual_e_radial = Ellipse(Point(disk_posi[0],disk_posi[1]),virtual_e_radius[0],virtual_e_radius[1])
-#virtual_e_tan = Ellipse(Point(disk_posi[0],disk_posi[1]),virtual_e_radius[1],virtual_e_radius[0])
 virtual_e1 = defineVirtualEllipses(disk_posi)
 
-#virtual_e1_radial_a = virtual_e1[2]
-#virtual_e1_radial_b = virtual_e1[3]
-#equ = virtual_e_radial.equation()
-#virtual_e_radial_a = virtual_e_radial.hradius
-#virtual_e_radial_b = virtual_e_radial.vradius
-
 taken_posi = [disk_posi]
+
 while_number = 0
 while len(positions) > 0: 
-    
-#the conditon to stop the while is blur
-#for random_N in range(0, N_disks):   
     disk_posi_new = positions[-1] 
-    #taken_posi.append(disk_posi_new)
-    #print("taken posi: ", taken_posi, "length of positions: ", len(positions))
-    #t_define1 = time.time()
-    new_list = caclulateNewList(disk_posi_new,taken_posi) 
-#    t_define2 = time.time()
-    
-#    t_define_d = t_define2 - t_define1
-    #print ("Time_function: ", t_define_d)
+    new_list = caclulateNewList(disk_posi_new,taken_posi)
     while_number = while_number + 1
-    #delete the position
 
-#    if len(new_list) > N_disks:
-#        break  #final list of position I want
-
-# print("whileNumber: ", while_number)
 print ("taken_list", taken_posi)
 
 
@@ -371,3 +339,18 @@ bx = plt.gca()
 bx.set_xlim([-800,800])
 bx.set_ylim([-500,500])
 plt.show()
+
+# =============================================================================
+# Crowding and Uncrowding conditions
+# =============================================================================
+
+
+
+
+
+
+
+
+
+
+
