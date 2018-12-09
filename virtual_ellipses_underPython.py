@@ -22,6 +22,11 @@ import matplotlib.pyplot as plt
 from shapely.geometry.polygon import LinearRing
 from math import atan2, pi
 from matplotlib.patches import Ellipse
+from shapely.geometry import LineString
+from shapely.geometry import Point
+from shapely.geometry import Polygon
+
+
 #import sys
 
 # =============================================================================
@@ -157,6 +162,39 @@ def checkPosiOnEllipse( h, k, x, y, a, b):
     p = ((math.pow((x-h), 2) // math.pow(a, 2)) + (math.pow((y-k), 2) // math.pow(b, 2)))
     return p #if p<1, inside
 
+def ellipseToPolygon(ellipse, n=200):
+    '''
+    This function transfer an ellipse to ellipseToPolygon in radial and tangential directions
+    '''
+    t = np.linspace(0, 2*np.pi, n, endpoint=False)
+    st = np.sin(t)
+    ct = np.cos(t)
+    result = []
+    for x0, y0, a, b, angle, angle2 in ellipse: #angle2: tangential direction of the ellilpse, not used in intersection expectation
+        angle = np.deg2rad(angle)
+        sa = np.sin(angle)
+        ca = np.cos(angle)
+        pointE = np.empty((n, 2))
+        pointE[:, 0] = x0 + a * ca * ct - b * sa * st
+        pointE[:, 1] = y0 + a * sa * ct + b * ca * st
+        result.append(pointE)
+    result2 = []
+    for x0, y0, a, b, angle, angle2 in ellipse: #angle2: tangential direction of the ellilpse, not used in intersection expectation
+        angle2 = np.deg2rad(angle2)
+        sa2 = np.sin(angle2)
+        ca2 = np.cos(angle2)
+        pointE2 = np.empty((n, 2))
+        pointE2[:, 0] = x0 + a * ca2 * ct - b * sa2 * st
+        pointE2[:, 1] = y0 + a * sa2 * ct + b * ca2 * st
+        result2.append(pointE2)
+    #ellipseA, ellipseB are the dots of two ellipse
+    ellipse1 = result[0]
+    ellipse2 = result2[0]
+#    ellipseB = result[1]
+    ellipse1 = Polygon(ellipse1)
+    ellipse2 = Polygon(ellipse2)
+    return ellipse1, ellipse2
+
 def ellipse_polyline_intersection(ellipses, n=500):
     '''
     This function transfer an ellipse to ellipse_poluline and then check the intersections of two ellipses. It
@@ -249,17 +287,17 @@ def caclulateNewList (random_disk_coordinate, taken_list):
     taken_list.append(random_disk_coordinate)
     #delete the the current position from the list positions and the corrosponding ellipses points.
     positions.pop(-1)
-    del_p3 =[]
-    tempList3 = positions.copy()
-    for NPosition in positions:
-        judge = checkPosiOnEllipse(random_disk_coordinate[0], random_disk_coordinate[1], NPosition[0],NPosition[1],virtual_e_2[2],virtual_e_2[3]) 
-        if judge <= 1:
-            del_p3.append(NPosition)
-            try:
-                tempList3.remove(del_p3)
-            except ValueError:
-                pass
-    positions = tempList3
+#    del_p3 =[]
+#    tempList3 = positions.copy()
+#    for NPosition in positions:
+#        judge = checkPosiOnEllipse(random_disk_coordinate[0], random_disk_coordinate[1], NPosition[0],NPosition[1],virtual_e_2[2],virtual_e_2[3]) 
+#        if judge <= 1:
+#            del_p3.append(NPosition)
+#            try:
+#                tempList3.remove(del_p3)
+#            except ValueError:
+#                pass
+#    positions = tempList3
     return taken_list  #final list of position I want
 
 '''
@@ -291,7 +329,7 @@ def drawEllipse (e_posi):
         else: #tangential ellipses
             angle_deg0 = angle_rad0*180/pi + 90
             angle_deg.append(angle_deg0)
-    my_e = [Ellipse(xy=e_posi[j], width=eccentricities[j]*0.5, height=eccentricities[j]*0.2, angle = angle_deg[j] )
+    my_e = [Ellipse(xy=e_posi[j], width=eccentricities[j]*ka*2, height=eccentricities[j]*kb*2, angle = angle_deg[j] )
             for j in range(len(e_posi))]
     
     fig, ax = plt.subplots(subplot_kw={'aspect': 'equal'})
@@ -343,14 +381,40 @@ plt.show()
 # =============================================================================
 # Crowding and Uncrowding conditions
 # =============================================================================
+finalE =[]
+for new_posi in taken_posi:
+    finalE0 = defineVirtualEllipses(new_posi)
+    finalE.append(finalE0)
 
+#radial direction
+ellipsePolygons = []
+for i in finalE:
+    ellipsePolygon = ellipseToPolygon([i])[0]
+    ellipsePolygons.append(ellipsePolygon)
 
+#tangential direction
+ellipsePolygonsT = []
+for i in finalE:
+    ellipsePolygon2 = ellipseToPolygon([i])[1]
+    ellipsePolygonsT.append(ellipsePolygon2)
 
+#radial direction extra points
+extraPointsR = []
+for Newpoint in tempList:
+    for ep in ellipsePolygons:
+        if ep.contains(Point(Newpoint)) == True:
+            extraPointsR.append(Newpoint)
 
+#tangential direction extra points
+extraPointsT = []
+for NewpointT in tempList:
+    for epT in ellipsePolygonsT:
+        if epT.contains(Point(NewpointT)) == True:
+            extraPointsT.append(NewpointT)
 
+#see extraPointR
+for i in extraPointsR:
+    plt.plot(i[0],i[1], 'ko')
 
-
-
-
-
-
+#for i in extraPointsT:
+#    plt.plot(i[0],i[1], 'ro')
