@@ -2,15 +2,19 @@
 """
 Created on Sun Nov 18 16:36:16 2018
 
-@author: Miao
+@author: MiaoLi
+
 This scrip :
-    0. Run under python environment
+    0. Run under python environment and strongly depend on the following environment
+        0.0 scipy:  https://www.scipy.org/install.html
+        0.1 shapely:  https://pypi.org/project/Shapely/
     1. define posible positins of disks
     2. vary the presentation window
-    3. define virtual ellipse with 3 parameters, coordinate, ka and kb
+    3. define tangiantial and radial virtual ellipses 
     4. check a postion is in/outside an ellipse
     5. return a list contains a group of positions that the corresponding virtual ellipses never overlap 
-    6. visuralized the results
+    6. add extra positions under radial and tangential conditions
+    7. visuralized the results
 """
 import numpy as np 
 import math
@@ -22,20 +26,18 @@ import matplotlib.pyplot as plt
 from shapely.geometry.polygon import LinearRing
 from math import atan2, pi
 from matplotlib.patches import Ellipse
-from shapely.geometry import LineString
+#from shapely.geometry import LineString
 from shapely.geometry import Point
 from shapely.geometry import Polygon
-
-
 #import sys
 
 # =============================================================================
 # Some global variables
 # =============================================================================
-ka = 0.25 #The parameter of semi-major axis of ellipse
-kb = 0.1 #The parameter of semi-minor axis of ellipse
+ka = 0.3 #The parameter of semi-major axis of ellipse
+kb = 0.12 #The parameter of semi-minor axis of ellipse
 r = 200 #The radius of protected fovea area
-newWindowSize = 0.8 #How much presentation area do we need?
+newWindowSize = 1 #How much presentation area do we need?
 draw_ellipse = "radial"
 
 # =============================================================================
@@ -191,8 +193,8 @@ def ellipseToPolygon(ellipse, n=200):
     ellipse1 = result[0]
     ellipse2 = result2[0]
 #    ellipseB = result[1]
-    ellipse1 = Polygon(ellipse1)
-    ellipse2 = Polygon(ellipse2)
+#    ellipse1 = Polygon(ellipse1)
+#    ellipse2 = Polygon(ellipse2)
     return ellipse1, ellipse2
 
 def ellipse_polyline_intersection(ellipses, n=500):
@@ -329,7 +331,7 @@ def drawEllipse (e_posi):
         else: #tangential ellipses
             angle_deg0 = angle_rad0*180/pi + 90
             angle_deg.append(angle_deg0)
-    my_e = [Ellipse(xy=e_posi[j], width=eccentricities[j]*ka*2, height=eccentricities[j]*kb*2, angle = angle_deg[j] )
+    my_e = [Ellipse(xy=e_posi[j], width=eccentricities[j]*ka*2, height=eccentricities[j]*kb*2, angle = angle_deg[j])
             for j in range(len(e_posi))]
     
     fig, ax = plt.subplots(subplot_kw={'aspect': 'equal'})
@@ -338,9 +340,9 @@ def drawEllipse (e_posi):
         #e.set_clip_box(ax.bbox)
         #e.set_alpha(np.random.rand())
         e.set_facecolor(np.random.rand(3))
-    ax.set_xlim(-800, 800)
-    ax.set_ylim(-500, 500)
-    plt.show()
+    ax.set_xlim([-800, 800])
+    ax.set_ylim([-500, 500])
+#    plt.show()
 
 # =============================================================================
 # Denerate disks with corresponding virtual ellipses
@@ -349,72 +351,140 @@ def drawEllipse (e_posi):
 #first random disk
 disk_posi = positions[-1] #random.choice(positions)
 positions.pop(-1)
-
 virtual_e1 = defineVirtualEllipses(disk_posi)
-
 taken_posi = [disk_posi]
-
+#all other disks
 while_number = 0
 while len(positions) > 0: 
     disk_posi_new = positions[-1] 
     new_list = caclulateNewList(disk_posi_new,taken_posi)
     while_number = while_number + 1
-
 print ("taken_list", taken_posi)
-
 
 # =============================================================================
 # visualization
 # =============================================================================
 
 #show vitrual ellipses
-drawEs = drawEllipse(taken_posi)
+#drawEs = drawEllipse(taken_posi)
 
-#show selected points
-for points in taken_posi:
-    plt.plot(points[0], points[1], 'ko')
-bx = plt.gca()
-bx.set_xlim([-800,800])
-bx.set_ylim([-500,500])
-plt.show()
+##show selected points
+#for points in taken_posi:
+#    plt.plot(points[0], points[1], 'ko')
+#bx = plt.gca()
+#bx.set_xlim([-800,800])
+#bx.set_ylim([-500,500])
+#plt.show()
 
 # =============================================================================
-# Crowding and Uncrowding conditions
+# Crowding and Uncrowding conditions #FIXME
 # =============================================================================
+
+'''All ellipses that have been drawn'''
 finalE =[]
 for new_posi in taken_posi:
     finalE0 = defineVirtualEllipses(new_posi)
     finalE.append(finalE0)
 
-#radial direction
-ellipsePolygons = []
+'''plot only on non-overap area. Remove the overlap area between radial and tangential ellipses'''
+del_p3 =[]
+tempTemplist = tempList.copy()
 for i in finalE:
-    ellipsePolygon = ellipseToPolygon([i])[0]
-    ellipsePolygons.append(ellipsePolygon)
+    tempER = ellipseToPolygon([i])[0]
+    tempERpolygon = Polygon(tempER)
+    tempET = ellipseToPolygon([i])[1]
+    tempETpolygon = Polygon(tempET)
+    for tempP in tempList:
+        if tempERpolygon.contains(Point(tempP)) == True and tempETpolygon.contains(Point(tempP)) == True:
+            del_p3.append(tempP)
+            try:
+                tempTemplist.remove(tempP)
+            except ValueError:
+                pass
+tempListF= tempTemplist # all position positions to add extra disks
 
-#tangential direction
-ellipsePolygonsT = []
-for i in finalE:
-    ellipsePolygon2 = ellipseToPolygon([i])[1]
-    ellipsePolygonsT.append(ellipsePolygon2)
-
-#radial direction extra points
-extraPointsR = []
-for Newpoint in tempList:
-    for ep in ellipsePolygons:
-        if ep.contains(Point(Newpoint)) == True:
-            extraPointsR.append(Newpoint)
-
-#tangential direction extra points
-extraPointsT = []
-for NewpointT in tempList:
-    for epT in ellipsePolygonsT:
-        if epT.contains(Point(NewpointT)) == True:
-            extraPointsT.append(NewpointT)
-
-#see extraPointR
-for i in extraPointsR:
-    plt.plot(i[0],i[1], 'ko')
-
-#for i in extraPointsT:
+#for i in tempListF:
 #    plt.plot(i[0],i[1], 'ro')
+
+'''extra positions: radial and tangential direction'''
+#ellipsePolygons = []
+#extraPointsR = []
+#extraPointsRB = []
+dic_radialA = dict()
+dic_radialB = dict()
+dic_tanA = dict()
+dic_tanB = dict()
+#ellipsePolygonsT = []
+for i in finalE:
+    ellipsePolygon = ellipseToPolygon([i])[0] #radial ellipse
+    ellipsePolygonT = ellipseToPolygon([i])[1]#tangential ellipse
+    #ellipsePolygons.append(ellipsePolygon)
+    #ellipsePolygon2 = ellipseToPolygon([i])[1]
+    #ellipsePolygonsT.append(ellipsePolygon2)
+    epPolygon = Polygon(ellipsePolygon)
+    epPolygonT = Polygon(ellipsePolygonT)
+    random.shuffle(tempListF) #to make sure the list order is different in every run
+    for Newpoint in tempListF:
+        if epPolygon.contains(Point(Newpoint)) == True:
+            distanceE = distance.euclidean(Newpoint,(0,0))
+            if distance.euclidean((i[0],i[1]),(0,0)) < distanceE: #divide A,B areas
+#                extraPointsR.append(Newpoint)
+                dic_radialA.update({i:Newpoint})# every update overlaped, but we just need one. #FIXME
+            else:
+#                extraPointsRB.append(Newpoint)
+                dic_radialB.update({i:Newpoint})
+        if epPolygonT.contains(Point(Newpoint)) == True: #tangantil condition, the comparison need to be improved #TODO
+            y_Newpoint = abs(Newpoint[1])
+            x_Newpoint = abs(Newpoint[0])
+            if y_Newpoint < abs(i[1]) and x_Newpoint > abs(i[0]): #divide A,B areas, use x,y-axis of newpoint and x,y-axis of the ellipse
+                dic_tanA.update({i:Newpoint}) #every update overlap with the perious position. #FIXME
+            else:
+                dic_tanB.update({i:Newpoint})
+
+# =============================================================================
+# visualization2
+# =============================================================================
+'''corresponding ellipses  '''
+drawEs = drawEllipse(taken_posi)
+
+'''initial positions'''
+fig1,bx = plt.subplots()
+for points in taken_posi:
+    bx.plot(points[0], points[1], 'ko')
+bx.set_title("initial positions")
+bx.set_xlim([-800,800])
+bx.set_ylim([-500,500])
+
+'''add extra points radial direction'''
+fig2,bx1 = plt.subplots()
+for points in taken_posi:
+    plt.plot(points[0], points[1], 'ko')
+bx1 = plt.gca()
+bx1.set_title("crowding condition")
+bx1.set_xlim([-800,800])
+bx1.set_ylim([-500,500])
+R = random.choice([0,1])
+#print(R)
+if R == 0:
+    for i in dic_radialA.values():
+        plt.plot(i[0],i[1], 'ro')
+else:
+    for i in dic_radialB.values():
+        plt.plot(i[0],i[1], 'ro')
+
+'''add extra points tangential direction'''
+fig3,bx2 = plt.subplots()
+for points in taken_posi:
+    plt.plot(points[0], points[1], 'ko')
+bx2 = plt.gca()
+bx2.set_title("no-crowding condition")
+bx2.set_xlim([-800,800])
+bx2.set_ylim([-500,500])
+R2 = random.choice([0,1])
+if R2 == 0:
+    for j in dic_tanB.values():
+        plt.plot(j[0],j[1],'go')
+else:
+    for j in dic_tanB.values():
+        plt.plot(j[0],j[1],'go')
+
