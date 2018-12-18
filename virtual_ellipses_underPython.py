@@ -5,7 +5,7 @@ Created on Sun Nov 18 16:36:16 2018
 @author: MiaoLi
 
 This scrip :
-    0. Run under python environment and strongly depend on the following environment
+    0. Strongly depend on the following environment under Python
         0.0 scipy:  https://www.scipy.org/install.html
         0.1 shapely:  https://pypi.org/project/Shapely/
     1. define posible positins of disks
@@ -14,7 +14,9 @@ This scrip :
     4. check a postion is in/outside an ellipse
     5. return a list contains a group of positions that the corresponding virtual ellipses never overlap 
     6. add extra positions under radial and tangential conditions
+        6.0 fixed dictionary with an initial ellipse as a key and corrospanding no-overlapping areas as a value list
     7. visuralized the results
+        7.0 improved the visual resolution
 """
 import numpy as np 
 import math
@@ -34,10 +36,10 @@ from shapely.geometry import Polygon
 # =============================================================================
 # Some global variables
 # =============================================================================
-ka = 0.3 #The parameter of semi-major axis of ellipse
-kb = 0.12 #The parameter of semi-minor axis of ellipse
+ka = 0.4 #The parameter of semi-major axis of ellipse
+kb = 0.2 #The parameter of semi-minor axis of ellipse
 r = 200 #The radius of protected fovea area
-newWindowSize = 1 #How much presentation area do we need?
+newWindowSize = 0.8 #How much presentation area do we need?
 draw_ellipse = "radial"
 
 # =============================================================================
@@ -337,8 +339,8 @@ def drawEllipse (e_posi):
     fig, ax = plt.subplots(subplot_kw={'aspect': 'equal'})
     for e in my_e:
         ax.add_artist(e)
-        #e.set_clip_box(ax.bbox)
-        #e.set_alpha(np.random.rand())
+        e.set_clip_box(ax.bbox)
+        e.set_alpha(np.random.rand())
         e.set_facecolor(np.random.rand(3))
     ax.set_xlim([-800, 800])
     ax.set_ylim([-500, 500])
@@ -414,8 +416,13 @@ dic_radialA = dict()
 dic_radialB = dict()
 dic_tanA = dict()
 dic_tanB = dict()
+radialValuesA = []
+radialValuesB = []
+#posiableRadialposi = []
+#posiableTanposi = []
+
 #ellipsePolygonsT = []
-for i in finalE:
+for count, i in enumerate(finalE, start = 1):
     ellipsePolygon = ellipseToPolygon([i])[0] #radial ellipse
     ellipsePolygonT = ellipseToPolygon([i])[1]#tangential ellipse
     #ellipsePolygons.append(ellipsePolygon)
@@ -424,26 +431,36 @@ for i in finalE:
     epPolygon = Polygon(ellipsePolygon)
     epPolygonT = Polygon(ellipsePolygonT)
     random.shuffle(tempListF) #to make sure the list order is different in every run
+    posiableRadialposiA = []
+    posiableRadialposiB = []
+    posiableTanposiA = []
+    posiableTanposiB = []
     for Newpoint in tempListF:
-        if epPolygon.contains(Point(Newpoint)) == True:
+        if epPolygon.contains(Point(Newpoint)) == True: #Points in/outside ellipse
             distanceE = distance.euclidean(Newpoint,(0,0))
             if distance.euclidean((i[0],i[1]),(0,0)) < distanceE: #divide A,B areas
-#                extraPointsR.append(Newpoint)
-                dic_radialA.update({i:Newpoint})# every update overlaped, but we just need one. #FIXME
+                posiableRadialposiA.append(Newpoint)
+                dic_radialA.update({i:posiableRadialposiA})
             else:
-#                extraPointsRB.append(Newpoint)
-                dic_radialB.update({i:Newpoint})
-        if epPolygonT.contains(Point(Newpoint)) == True: #tangantil condition, the comparison need to be improved #TODO
+                posiableRadialposiB.append(Newpoint)
+                dic_radialB.update({i:posiableRadialposiB})
+        elif epPolygonT.contains(Point(Newpoint)) == True:
             y_Newpoint = abs(Newpoint[1])
             x_Newpoint = abs(Newpoint[0])
-            if y_Newpoint < abs(i[1]) and x_Newpoint > abs(i[0]): #divide A,B areas, use x,y-axis of newpoint and x,y-axis of the ellipse
-                dic_tanA.update({i:Newpoint}) #every update overlap with the perious position. #FIXME
+            if y_Newpoint < abs(i[1]) and x_Newpoint > abs(i[0]):
+                posiableTanposiA.append(Newpoint)
+                dic_tanA.update({i:posiableTanposiA})
             else:
-                dic_tanB.update({i:Newpoint})
-
+                posiableTanposiB.append(Newpoint)
+                dic_tanB.update({i:posiableTanposiB})
+        else:
+            continue
 # =============================================================================
 # visualization2
 # =============================================================================
+plt.rcParams['savefig.dpi'] = 100
+plt.rcParams['figure.dpi'] = 100
+
 '''corresponding ellipses  '''
 drawEs = drawEllipse(taken_posi)
 
@@ -466,11 +483,22 @@ bx1.set_ylim([-500,500])
 R = random.choice([0,1])
 #print(R)
 if R == 0:
-    for i in dic_radialA.values():
-        plt.plot(i[0],i[1], 'ro')
+#    for key, value in dic_radialA.items:
+    plotVa = []
+    for i in range(0,len(dic_radialA)):
+        keysP = list(dic_radialA.keys())[i]
+        valueP0 = list(dic_radialA[keysP])[0]
+        plotVa.append(valueP0)
+        plt.plot(plotVa[i][0],plotVa[i][1], 'ro')
+#        plt.plot(plotVa,'ro')
 else:
-    for i in dic_radialB.values():
-        plt.plot(i[0],i[1], 'ro')
+    plotVb = []
+    for i in range(0,len(dic_radialB)):
+        keysP = list(dic_radialB.keys())[i]
+        valueP0 = list(dic_radialB[keysP])[0]
+        plotVb.append(valueP0)
+        plt.plot(plotVa[i][0],plotVa[i][1], 'ro')
+#        plt.plot(plotVb,'ro')
 
 '''add extra points tangential direction'''
 fig3,bx2 = plt.subplots()
@@ -482,9 +510,17 @@ bx2.set_xlim([-800,800])
 bx2.set_ylim([-500,500])
 R2 = random.choice([0,1])
 if R2 == 0:
-    for j in dic_tanB.values():
-        plt.plot(j[0],j[1],'go')
+    plotVa_tan = []
+    for i in range(0,len(dic_tanA)):
+        keysP = list(dic_tanA.keys())[i]
+        valueP0 = list(dic_tanA[keysP])[0]
+        plotVa_tan.append(valueP0)
+        plt.plot(plotVa_tan[i][0],plotVa_tan[i][1], 'go')
+#        plt.plot(plotVa,'ro')
 else:
-    for j in dic_tanB.values():
-        plt.plot(j[0],j[1],'go')
-
+    plotVb_tan = []
+    for i in range(0,len(dic_tanB)):
+        keysP = list(dic_tanB.keys())[i]
+        valueP0 = list(dic_tanB[keysP])[0]
+        plotVb_tan.append(valueP0)
+        plt.plot(plotVb_tan[i][0],plotVb_tan[i][1], 'go')
