@@ -13,11 +13,18 @@ This scrip :
     3. define tangiantial and radial virtual ellipses 
     4. check a postion is in/outside an ellipse
     5. return a list contains a group of positions that the corresponding virtual ellipses never overlap 
-    6. add extra positions under radial and tangential conditions
+    Idea1:
+        crowding and no crowding conditions
+        --->fill the display with ellipses till no ellipse could be added. 
+            Radial ellipses formed the no crowding condition and tangential 
+            ellipses formed the crowding condition
+    *6. add extra positions under radial and tangential conditions
         6.0 fixed dictionary with an initial ellipse as a key and corrospanding no-overlapping areas as a value list
-    7. visuralized the results
+    *7. visuralized the results
         7.0 improved the visual resolution
+TODO: rfp (radial frequency patterns) modulation for foveal
 """
+
 import numpy as np 
 import math
 #from sympy import Ellipse, Point, Line, sqrt
@@ -36,11 +43,11 @@ from shapely.geometry import Polygon
 # =============================================================================
 # Some global variables
 # =============================================================================
-ka = 0.4 #The parameter of semi-major axis of ellipse
-kb = 0.2 #The parameter of semi-minor axis of ellipse
-r = 200 #The radius of protected fovea area
+ka = 0.25#The parameter of semi-major axis of ellipse
+kb = 0.1
+ #The parameter of semi-minor axis of ellipse
+r = 100 #The radius of protected fovea area
 newWindowSize = 0.8 #How much presentation area do we need?
-draw_ellipse = "radial"
 
 # =============================================================================
 # Possible positions
@@ -69,7 +76,7 @@ try:
 except ValueError:
     pass
 
-''' Define and remove a fovea area (a circle) of r ==??'''
+''' Define and remove a fovea area (a circle) of r == ??'''
 del_p = []
 tempList = positions.copy()
 for tempP in positions:
@@ -327,12 +334,8 @@ def drawEllipse (e_posi):
     angle_deg = []
     for ang in range(len(e_posi)):
         angle_rad0 = atan2(e_posi[ang][1],e_posi[ang][0])
-        if draw_ellipse == "radial":
-            angle_deg0 = angle_rad0*180/pi
-            angle_deg.append(angle_deg0)
-        else: #tangential ellipses
-            angle_deg0 = angle_rad0*180/pi + 90
-            angle_deg.append(angle_deg0)
+        angle_deg0 = angle_rad0*180/pi
+        angle_deg.append(angle_deg0)
     my_e = [Ellipse(xy=e_posi[j], width=eccentricities[j]*ka*2, height=eccentricities[j]*kb*2, angle = angle_deg[j])
             for j in range(len(e_posi))]
     
@@ -344,6 +347,36 @@ def drawEllipse (e_posi):
         e.set_facecolor(np.random.rand(3))
     ax.set_xlim([-800, 800])
     ax.set_ylim([-500, 500])
+    ax.set_title("radial_no_crowding")
+
+def drawEllipseT (e_posi): 
+    """
+    This function allows to draw more than one ellipse. The parameter is 
+    a list of coordinate (must contain at least two coordinates)
+    The direction of ellipses are only radial direction,
+    """
+    eccentricities = []
+    for i in range(len(e_posi)):
+        eccentricities0 = distance.euclidean(e_posi[i], (0,0))
+        eccentricities.append(eccentricities0)
+
+    angle_deg = []
+    for ang in range(len(e_posi)):
+        angle_rad0 = atan2(e_posi[ang][1],e_posi[ang][0])
+        angle_deg0 = angle_rad0*180/pi + 90
+        angle_deg.append(angle_deg0)
+    my_e = [Ellipse(xy=e_posi[j], width=eccentricities[j]*ka*2, height=eccentricities[j]*kb*2, angle = angle_deg[j]+90)
+            for j in range(len(e_posi))]
+    
+    fig, ax = plt.subplots(subplot_kw={'aspect': 'equal'})
+    for e in my_e:
+        ax.add_artist(e)
+        e.set_clip_box(ax.bbox)
+        e.set_alpha(np.random.rand())
+        e.set_facecolor(np.random.rand(3))
+    ax.set_xlim([-800, 800])
+    ax.set_ylim([-500, 500])
+    ax.set_title("tangential_crowding")
 #    plt.show()
 
 # =============================================================================
@@ -379,7 +412,7 @@ print ("taken_list", taken_posi)
 #plt.show()
 
 # =============================================================================
-# Crowding and Uncrowding conditions #FIXME
+# Crowding and Uncrowding conditions 1 #FIXME
 # =============================================================================
 
 '''All ellipses that have been drawn'''
@@ -456,13 +489,10 @@ for count, i in enumerate(finalE, start = 1):
         else:
             continue
 # =============================================================================
-# visualization2
+# Visualization 3 Crowding vs no crowding Idea1
 # =============================================================================
 plt.rcParams['savefig.dpi'] = 100
 plt.rcParams['figure.dpi'] = 100
-
-'''corresponding ellipses  '''
-drawEs = drawEllipse(taken_posi)
 
 '''initial positions'''
 fig1,bx = plt.subplots()
@@ -472,55 +502,77 @@ bx.set_title("initial positions")
 bx.set_xlim([-800,800])
 bx.set_ylim([-500,500])
 
-'''add extra points radial direction'''
-fig2,bx1 = plt.subplots()
-for points in taken_posi:
-    plt.plot(points[0], points[1], 'ko')
-bx1 = plt.gca()
-bx1.set_title("crowding condition")
-bx1.set_xlim([-800,800])
-bx1.set_ylim([-500,500])
-R = random.choice([0,1])
-#print(R)
-if R == 0:
-#    for key, value in dic_radialA.items:
-    plotVa = []
-    for i in range(0,len(dic_radialA)):
-        keysP = list(dic_radialA.keys())[i]
-        valueP0 = list(dic_radialA[keysP])[0]
-        plotVa.append(valueP0)
-        plt.plot(plotVa[i][0],plotVa[i][1], 'ro')
-#        plt.plot(plotVa,'ro')
+'''see ellipses'''
+if ka > kb:
+    drawER = drawEllipse(taken_posi)
 else:
-    plotVb = []
-    for i in range(0,len(dic_radialB)):
-        keysP = list(dic_radialB.keys())[i]
-        valueP0 = list(dic_radialB[keysP])[0]
-        plotVb.append(valueP0)
-        plt.plot(plotVa[i][0],plotVa[i][1], 'ro')
-#        plt.plot(plotVb,'ro')
-
-'''add extra points tangential direction'''
-fig3,bx2 = plt.subplots()
-for points in taken_posi:
-    plt.plot(points[0], points[1], 'ko')
-bx2 = plt.gca()
-bx2.set_title("no-crowding condition")
-bx2.set_xlim([-800,800])
-bx2.set_ylim([-500,500])
-R2 = random.choice([0,1])
-if R2 == 0:
-    plotVa_tan = []
-    for i in range(0,len(dic_tanA)):
-        keysP = list(dic_tanA.keys())[i]
-        valueP0 = list(dic_tanA[keysP])[0]
-        plotVa_tan.append(valueP0)
-        plt.plot(plotVa_tan[i][0],plotVa_tan[i][1], 'go')
-#        plt.plot(plotVa,'ro')
-else:
-    plotVb_tan = []
-    for i in range(0,len(dic_tanB)):
-        keysP = list(dic_tanB.keys())[i]
-        valueP0 = list(dic_tanB[keysP])[0]
-        plotVb_tan.append(valueP0)
-        plt.plot(plotVb_tan[i][0],plotVb_tan[i][1], 'go')
+    drwaET = drawEllipseT(taken_posi)
+# =============================================================================
+# visualization2
+# =============================================================================
+#plt.rcParams['savefig.dpi'] = 100
+#plt.rcParams['figure.dpi'] = 100
+#
+#'''corresponding ellipses  '''
+#drawEs = drawEllipse(taken_posi)
+#
+#'''initial positions'''
+#fig1,bx = plt.subplots()
+#for points in taken_posi:
+#    bx.plot(points[0], points[1], 'ko')
+#bx.set_title("initial positions")
+#bx.set_xlim([-800,800])
+#bx.set_ylim([-500,500])
+#
+#'''add extra points radial direction'''
+#fig2,bx1 = plt.subplots()
+#for points in taken_posi:
+#    plt.plot(points[0], points[1], 'ko')
+#bx1 = plt.gca()
+#bx1.set_title("crowding condition")
+#bx1.set_xlim([-800,800])
+#bx1.set_ylim([-500,500])
+#R = random.choice([0,1])
+##print(R)
+#if R == 0:
+##    for key, value in dic_radialA.items:
+#    plotVa = []
+#    for i in range(0,len(dic_radialA)):
+#        keysP = list(dic_radialA.keys())[i]
+#        valueP0 = list(dic_radialA[keysP])[0]
+#        plotVa.append(valueP0)
+#        plt.plot(plotVa[i][0],plotVa[i][1], 'ro')
+##        plt.plot(plotVa,'ro')
+#else:
+#    plotVb = []
+#    for i in range(0,len(dic_radialB)):
+#        keysP = list(dic_radialB.keys())[i]
+#        valueP0 = list(dic_radialB[keysP])[0]
+#        plotVb.append(valueP0)
+#        plt.plot(plotVb[i][0],plotVb[i][1], 'ro')
+##        plt.plot(plotVb,'ro')
+#
+#'''add extra points tangential direction'''
+#fig3,bx2 = plt.subplots()
+#for points in taken_posi:
+#    plt.plot(points[0], points[1], 'ko')
+#bx2 = plt.gca()
+#bx2.set_title("no-crowding condition")
+#bx2.set_xlim([-800,800])
+#bx2.set_ylim([-500,500])
+#R2 = random.choice([0,1])
+#if R2 == 0:
+#    plotVa_tan = []
+#    for i in range(0,len(dic_tanA)):
+#        keysP = list(dic_tanA.keys())[i]
+#        valueP0 = list(dic_tanA[keysP])[0]
+#        plotVa_tan.append(valueP0)
+#        plt.plot(plotVa_tan[i][0],plotVa_tan[i][1], 'go')
+##        plt.plot(plotVa,'ro')
+#else:
+#    plotVb_tan = []
+#    for i in range(0,len(dic_tanB)):
+#        keysP = list(dic_tanB.keys())[i]
+#        valueP0 = list(dic_tanB[keysP])[0]
+#        plotVb_tan.append(valueP0)
+#        plt.plot(plotVb_tan[i][0],plotVb_tan[i][1], 'go')
