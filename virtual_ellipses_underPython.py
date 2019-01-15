@@ -43,9 +43,8 @@ from shapely.geometry import Polygon
 # =============================================================================
 # Some global variables
 # =============================================================================
-ka = 0.25#The parameter of semi-major axis of ellipse
+ka = 0.25#The parameter of semi-major axis of ellipse.ka > kb, radial ellipse; ka < kb, tangential ellipse; ka = kb, circle
 kb = 0.1
- #The parameter of semi-minor axis of ellipse
 r = 100 #The radius of protected fovea area
 newWindowSize = 0.8 #How much presentation area do we need?
 
@@ -394,7 +393,7 @@ while len(positions) > 0:
     disk_posi_new = positions[-1] 
     new_list = caclulateNewList(disk_posi_new,taken_posi)
     while_number = while_number + 1
-print ("taken_list", taken_posi)
+print ("taken_list", taken_posi,"There are ", len(taken_posi), "s")
 
 # =============================================================================
 # visualization

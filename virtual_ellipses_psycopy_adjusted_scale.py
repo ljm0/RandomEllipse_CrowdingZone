@@ -25,15 +25,50 @@ from shapely.geometry import Point
 from shapely.geometry import Polygon
 #import sys
 
-# =============================================================================6
+# =============================================================================
 # Some global variables
 # =============================================================================
-ka = 0.1 #The parameter of semi-major axis of ellipse
-kb = 0.25
- #The parameter of semi-minor axis of ellipse
-r = 100 #The radius of protected fovea area
+
+ka = 0.25 #The parameter of semi-major axis of ellipse
+kb = 0.1  #The parameter of semi-minor axis of ellipse
+
+# ka = 0.25
+# kb = 0.05
+
+# ka = 0.25
+# kb = 0.075
+
+# ka = 0.3
+# kb = 0.12
+
+# ka = 0.3
+# kb = 0.06
+
+# ka = 0.3
+# kb = 0.09
+
+# crowding_cons = 1 #crowding = 1, nocrowding = 0
+crowding_cons = 0
+
+if crowding_cons == 1:
+    if ka > kb:
+        tempk = ka
+        ka = kb
+        kb = tempk
+else:
+    if ka < kb:
+        tempk = ka
+        ka = kb
+        kb = tempk
+
+# r = 100
+r = 200 #The radius of protected fovea area
+
+# newWindowSize = 0.6
+# newWindowSize = 0.8
 newWindowSize = 1 #How much presentation area do we need?
 disk_radius = 5
+
 # =============================================================================
 # Possible positions
 # =============================================================================
@@ -41,8 +76,8 @@ disk_radius = 5
 '''a list of posible positions'''
 # grid_dimention_x = 30
 # grid_dimention_y = 30
-grid_dimention_x = 152
-grid_dimention_y = 84
+grid_dimention_x = 101
+grid_dimention_y = 75
 
 linelength = 10
 start_x = -0.5*linelength*grid_dimention_x + 0.5*linelength
@@ -470,14 +505,14 @@ fig1,bx = plt.subplots()
 for points in taken_posi:
     bx.plot(points[0], points[1], 'ko')
 bx.set_title("initial positions")
-bx.set_xlim([-800,800])
-bx.set_ylim([-500,500])
+bx.set_xlim([-550,550])
+bx.set_ylim([-420,420])
 
 '''see ellipses'''
-if ka > kb:
-    drawER = drawEllipse(taken_posi)
+if crowding_cons == 1: #crowding = 1, nocrowding = 0
+    drawER = drawEllipseT(taken_posi)
 else:
-    drwaET = drawEllipseT(taken_posi)
+    drwaET = drawEllipse(taken_posi)
 
 # =============================================================================
 # PsychoPy Parameter
@@ -519,7 +554,7 @@ win.flip()
 
 ##保存一帧屏幕
 win.getMovieFrame()
-win.saveMovieFrames('A3.png') 
+win.saveMovieFrames('crowding_%s_foveal_%s_winSize_%s_ellipseSize_%s_%s.png' %(crowding_cons,r,newWindowSize,ka,kb)) 
 
 
 

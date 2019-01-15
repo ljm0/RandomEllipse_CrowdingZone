@@ -1,12 +1,30 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Nov 18 16:36:16 2018
+Created on Mon Jan 07 11:50:59 2019
 
-@author: Miao
+@author: MiaoLi
+
 This scrip :
-    is the coorsponding PsychoPy version of 'virtual_ellipses_underPython'
-    
+    0. Strongly depend on the following environment under Python
+        0.0 scipy:  https://www.scipy.org/install.html
+        0.1 shapely:  https://pypi.org/project/Shapely/
+    1. define posible positins of disks
+    2. vary the presentation window
+    3. define tangiantial and radial virtual ellipses 
+    4. check a postion is in/outside an ellipse
+    5. return a list contains a group of positions that the corresponding virtual ellipses never overlap 
+    Idea1:
+        crowding and no crowding conditions
+        --->fill the display with ellipses till no ellipse could be added. 
+            Radial ellipses formed the no crowding condition and tangential 
+            ellipses formed the crowding condition
+    *6. add extra positions under radial and tangential conditions
+        6.0 fixed dictionary with an initial ellipse as a key and corrospanding no-overlapping areas as a value list
+    *7. visuralized the results
+        7.0 improved the visual resolution
+TODO: rfp (radial frequency patterns) modulation for foveal
 """
+
 import numpy as np 
 import math
 #from sympy import Ellipse, Point, Line, sqrt
@@ -17,23 +35,19 @@ import matplotlib.pyplot as plt
 from shapely.geometry.polygon import LinearRing
 from math import atan2, pi
 from matplotlib.patches import Ellipse
-from psychopy import locale_setup, gui, visual, core, data, event, logging, sound, monitors
-from psychopy.constants import (NOT_STARTED, STARTED, PLAYING, PAUSED,
-                                STOPPED, FINISHED, PRESSED, RELEASED, FOREVER)
-
+#from shapely.geometry import LineString
 from shapely.geometry import Point
 from shapely.geometry import Polygon
 #import sys
 
-# =============================================================================6
+# =============================================================================
 # Some global variables
 # =============================================================================
-ka = 0.1 #The parameter of semi-major axis of ellipse
-kb = 0.25
- #The parameter of semi-minor axis of ellipse
+ka = 0.25#The parameter of semi-major axis of ellipse.ka > kb, radial ellipse; ka < kb, tangential ellipse; ka = kb, circle
+kb = 0.1
 r = 100 #The radius of protected fovea area
-newWindowSize = 1 #How much presentation area do we need?
-disk_radius = 5
+newWindowSize = 0.8 #How much presentation area do we need?
+
 # =============================================================================
 # Possible positions
 # =============================================================================
@@ -147,7 +161,6 @@ def defineVirtualEllipses(coordinate):
     angle_radial = angle_rad*180/pi
     angle_tangential = angle_radial + 90
     V_ellipse = (coordinate[0],coordinate[1], ellipse_axis[0],ellipse_axis[1], angle_radial, angle_tangential)
-
     return V_ellipse
 
 def checkPosiOnEllipse( h, k, x, y, a, b):
@@ -160,7 +173,7 @@ def checkPosiOnEllipse( h, k, x, y, a, b):
 
 def ellipseToPolygon(ellipse, n=200):
     '''
-    This function transfer an ellipse to ellipseToPolygon in radial and tangential directions
+    This function transfer an ellipse to Polygon in radial and tangential directions
     '''
     t = np.linspace(0, 2*np.pi, n, endpoint=False)
     st = np.sin(t)
@@ -193,14 +206,14 @@ def ellipseToPolygon(ellipse, n=200):
 
 def ellipse_polyline_intersection(ellipses, n=500):
     '''
-    This function transfer an ellipse to ellipse_poluline and then check the intersections of two ellipses. It
+    This function transfer an ellipse to ellipse_polyline and then check the intersections of two ellipses. It
     returns the intercetion coordinate 
     '''
     t = np.linspace(0, 2*np.pi, n, endpoint=False)
     st = np.sin(t)
     ct = np.cos(t)
     result = []
-    for x0, y0, a, b, angle, angle2 in ellipses: #angle2: tangential direction of the ellilpse, not used in intersection expectation
+    for x0, y0, a, b, angle, angle2 in ellipses: #angle2: tangential direction of the ellilpse
         angle = np.deg2rad(angle)
         sa = np.sin(angle)
         ca = np.cos(angle)
@@ -379,7 +392,22 @@ while len(positions) > 0:
     disk_posi_new = positions[-1] 
     new_list = caclulateNewList(disk_posi_new,taken_posi)
     while_number = while_number + 1
-print ("taken_list", taken_posi,"Numbers", len(taken_posi))
+print ("taken_list", taken_posi,"There are ", len(taken_posi), "s")
+
+# =============================================================================
+# visualization
+# =============================================================================
+
+#show vitrual ellipses
+#drawEs = drawEllipse(taken_posi)
+
+##show selected points
+#for points in taken_posi:
+#    plt.plot(points[0], points[1], 'ko')
+#bx = plt.gca()
+#bx.set_xlim([-800,800])
+#bx.set_ylim([-500,500])
+#plt.show()
 
 # =============================================================================
 # Crowding and Uncrowding conditions 1 #FIXME
@@ -458,7 +486,6 @@ for count, i in enumerate(finalE, start = 1):
                 dic_tanB.update({i:posiableTanposiB})
         else:
             continue
-
 # =============================================================================
 # Visualization 3 Crowding vs no crowding Idea1
 # =============================================================================
@@ -478,48 +505,72 @@ if ka > kb:
     drawER = drawEllipse(taken_posi)
 else:
     drwaET = drawEllipseT(taken_posi)
-
 # =============================================================================
-# PsychoPy Parameter
+# visualization2
 # =============================================================================
-
-# monitor specifications
-monsize = [1024, 768]
-fullscrn = True
-scr = 0
-mondist = 57
-monwidth = 41
-Agui = False
-monitorsetting = monitors.Monitor('maxDimB', width=monwidth, distance=mondist)
-monitorsetting.setSizePix(monsize)
-
-win = visual.Window(monitor=monitorsetting, size=monsize, screen=scr, units='pix', fullscr=fullscrn, allowGUI=Agui, color=[0 ,0 ,0])
-#win = visual.Window(monitor=monitorsetting, size=monsize, units='pix', fullscr=fullscrn, allowGUI=Agui, color=[0 ,0 ,0])
-#win = visual.Window((1024, 768), units='pix', fullscr=False)
-#win = visual.Window((1024, 768), units='pix', fullscr=True)
-
-# fixation 
-text_msg = visual.TextStim(win, text= None, color=(-1.0, -1.0, -1.0))
-text_msg.setText('+')
-text_msg.setPos([0,0])
-text_msg.draw()
-
-#core.wait(0.80)
-
-#target disk
-trgt_disk = visual.Circle(win, radius = disk_radius, lineColor = "black", fillColor = "black")
-#trgt_disk.draw()
-#win.flip()
-
-for i in range(len(taken_posi)):
-      trgt_disk.setPos(taken_posi[i]) 
-      # print("i", taken_posi[i])
-      trgt_disk.draw()
-win.flip()
-
-##保存一帧屏幕
-win.getMovieFrame()
-win.saveMovieFrames('A3.png') 
-
-
-
+#plt.rcParams['savefig.dpi'] = 100
+#plt.rcParams['figure.dpi'] = 100
+#
+#'''corresponding ellipses  '''
+#drawEs = drawEllipse(taken_posi)
+#
+#'''initial positions'''
+#fig1,bx = plt.subplots()
+#for points in taken_posi:
+#    bx.plot(points[0], points[1], 'ko')
+#bx.set_title("initial positions")
+#bx.set_xlim([-800,800])
+#bx.set_ylim([-500,500])
+#
+#'''add extra points radial direction'''
+#fig2,bx1 = plt.subplots()
+#for points in taken_posi:
+#    plt.plot(points[0], points[1], 'ko')
+#bx1 = plt.gca()
+#bx1.set_title("crowding condition")
+#bx1.set_xlim([-800,800])
+#bx1.set_ylim([-500,500])
+#R = random.choice([0,1])
+##print(R)
+#if R == 0:
+##    for key, value in dic_radialA.items:
+#    plotVa = []
+#    for i in range(0,len(dic_radialA)):
+#        keysP = list(dic_radialA.keys())[i]
+#        valueP0 = list(dic_radialA[keysP])[0]
+#        plotVa.append(valueP0)
+#        plt.plot(plotVa[i][0],plotVa[i][1], 'ro')
+##        plt.plot(plotVa,'ro')
+#else:
+#    plotVb = []
+#    for i in range(0,len(dic_radialB)):
+#        keysP = list(dic_radialB.keys())[i]
+#        valueP0 = list(dic_radialB[keysP])[0]
+#        plotVb.append(valueP0)
+#        plt.plot(plotVb[i][0],plotVb[i][1], 'ro')
+##        plt.plot(plotVb,'ro')
+#
+#'''add extra points tangential direction'''
+#fig3,bx2 = plt.subplots()
+#for points in taken_posi:
+#    plt.plot(points[0], points[1], 'ko')
+#bx2 = plt.gca()
+#bx2.set_title("no-crowding condition")
+#bx2.set_xlim([-800,800])
+#bx2.set_ylim([-500,500])
+#R2 = random.choice([0,1])
+#if R2 == 0:
+#    plotVa_tan = []
+#    for i in range(0,len(dic_tanA)):
+#        keysP = list(dic_tanA.keys())[i]
+#        valueP0 = list(dic_tanA[keysP])[0]
+#        plotVa_tan.append(valueP0)
+#        plt.plot(plotVa_tan[i][0],plotVa_tan[i][1], 'go')
+##        plt.plot(plotVa,'ro')
+#else:
+#    plotVb_tan = []
+#    for i in range(0,len(dic_tanB)):
+#        keysP = list(dic_tanB.keys())[i]
+#        valueP0 = list(dic_tanB[keysP])[0]
+#        plotVb_tan.append(valueP0)
+#        plt.plot(plotVb_tan[i][0],plotVb_tan[i][1], 'go')
