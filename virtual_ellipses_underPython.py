@@ -40,6 +40,13 @@ from shapely.geometry import Point
 from shapely.geometry import Polygon
 #import sys
 
+import sys
+try:
+    _, loop_number, looop2 = sys.argv
+except Exception as e:
+    print('Usage: python loop_times')
+    sys.exit(0)
+
 # =============================================================================
 # Some global variables
 # =============================================================================
@@ -393,7 +400,7 @@ while len(positions) > 0:
     disk_posi_new = positions[-1] 
     new_list = caclulateNewList(disk_posi_new,taken_posi)
     while_number = while_number + 1
-print ("taken_list", taken_posi,"There are ", len(taken_posi), "s")
+print ("loop_number",loop_number, "taken_list", taken_posi,"There are ", len(taken_posi), "s")
 
 # =============================================================================
 # visualization
