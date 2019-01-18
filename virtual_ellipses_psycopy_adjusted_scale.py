@@ -23,7 +23,18 @@ from psychopy.constants import (NOT_STARTED, STARTED, PLAYING, PAUSED,
 
 from shapely.geometry import Point
 from shapely.geometry import Polygon
-#import sys
+#import image
+import sys
+import csv
+
+# =============================================================================
+# Run multiple time
+# =============================================================================
+try:
+    _, loop_number = sys.argv
+except Exception as e:
+    print('Usage: python loop_times')
+    sys.exit(0)
 
 # =============================================================================
 # Some global variables
@@ -497,22 +508,22 @@ for count, i in enumerate(finalE, start = 1):
 # =============================================================================
 # Visualization 3 Crowding vs no crowding Idea1
 # =============================================================================
-plt.rcParams['savefig.dpi'] = 100
-plt.rcParams['figure.dpi'] = 100
+# plt.rcParams['savefig.dpi'] = 100
+# plt.rcParams['figure.dpi'] = 100
 
-'''initial positions'''
-fig1,bx = plt.subplots()
-for points in taken_posi:
-    bx.plot(points[0], points[1], 'ko')
-bx.set_title("initial positions")
-bx.set_xlim([-550,550])
-bx.set_ylim([-420,420])
+# '''initial positions'''
+# fig1,bx = plt.subplots()
+# for points in taken_posi:
+#     bx.plot(points[0], points[1], 'ko')
+# bx.set_title("initial positions")
+# bx.set_xlim([-550,550])
+# bx.set_ylim([-420,420])
 
-'''see ellipses'''
-if crowding_cons == 1: #crowding = 1, nocrowding = 0
-    drawER = drawEllipseT(taken_posi)
-else:
-    drwaET = drawEllipse(taken_posi)
+# '''see ellipses'''
+# if crowding_cons == 1: #crowding = 1, nocrowding = 0
+#     drawER = drawEllipseT(taken_posi)
+# else:
+#     drwaET = drawEllipse(taken_posi)
 
 # =============================================================================
 # PsychoPy Parameter
@@ -554,7 +565,23 @@ win.flip()
 
 ##保存一帧屏幕
 win.getMovieFrame()
-win.saveMovieFrames('crowding_%s_foveal_%s_winSize_%s_ellipseSize_%s_%s.png' %(crowding_cons,r,newWindowSize,ka,kb)) 
 
+try:
+    loop_number
+except NameError:
+    var_exists = False
+else:
+    var_exists = True
+    win.saveMovieFrames('Run_%s_crowding_%s_foveal_%s_winSize_%s_ellipseSize_%s_%s.png' %(loop_number,crowding_cons,r,newWindowSize,ka,kb))
+    
+# =============================================================================
+# write
+# =============================================================================
 
-
+myFile = open('info.csv', 'a+')
+with myFile:
+    # myFields = ['Ndisks','RunTimes']
+    # writer = csv.DictWriter(myFile, fieldnames=myFields)
+    writer = csv.DictWriter(myFile)
+    # writer.writeheader()
+    writer.writerow({'Ndisks' : len(taken_posi),'RunTimes': loop_number})

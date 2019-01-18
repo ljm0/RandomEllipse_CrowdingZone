@@ -42,7 +42,7 @@ from shapely.geometry import Polygon
 
 import sys
 try:
-    _, loop_number, looop2 = sys.argv
+    _, loop_number = sys.argv
 except Exception as e:
     print('Usage: python loop_times')
     sys.exit(0)
