@@ -28,13 +28,14 @@ import sys
 import csv
 
 # =============================================================================
-# Run multiple time
+# Run multiple times
 # =============================================================================
 try:
     _, loop_number = sys.argv
 except Exception as e:
-    print('Usage: python loop_times')
-    sys.exit(0)
+    pass
+    #print('Usage: python loop_times')
+    #sys.exit(0)
 
 # =============================================================================
 # Some global variables
@@ -73,12 +74,12 @@ else:
         kb = tempk
 
 # r = 100
-r = 200 #The radius of protected fovea area
+r = 100 #The radius of protected fovea area
 
 # newWindowSize = 0.6
-# newWindowSize = 0.8
-newWindowSize = 1 #How much presentation area do we need?
-disk_radius = 5
+newWindowSize = 0.8
+# newWindowSize = 1 #How much presentation area do we need?
+disk_radius = 3.82
 
 # =============================================================================
 # Possible positions
@@ -378,7 +379,14 @@ def drawEllipse (e_posi):
         e.set_facecolor(np.random.rand(3))
     ax.set_xlim([-800, 800])
     ax.set_ylim([-500, 500])
-    ax.set_title("radial_no_crowding")
+    ax.set_title('c_%s_f_%s_wS_%s_eS_%s_%s_E.png' %(crowding_cons,r,newWindowSize,ka,kb))
+    try:
+        loop_number
+    except NameError:
+        var_exists = False
+    else:
+        var_exists = True
+        plt.savefig('%s_c_%s_f_%s_wS_%s_eS_%s_%s_E.png' %(loop_number,crowding_cons,r,newWindowSize,ka,kb))
 
 def drawEllipseT (e_posi): 
     """
@@ -407,7 +415,14 @@ def drawEllipseT (e_posi):
         e.set_facecolor(np.random.rand(3))
     ax.set_xlim([-800, 800])
     ax.set_ylim([-500, 500])
-    ax.set_title("tangential_crowding")
+    ax.set_title('c_%s_f_%s_wS_%s_eS_%s_%s_E.png' %(crowding_cons,r,newWindowSize,ka,kb))
+    try:
+        loop_number
+    except NameError:
+        var_exists = False
+    else:
+        var_exists = True
+        plt.savefig('%s_c_%s_f_%s_wS_%s_eS_%s_%s_E.png' %(loop_number,crowding_cons,r,newWindowSize,ka,kb))
 #    plt.show()
 
 # =============================================================================
@@ -508,22 +523,29 @@ for count, i in enumerate(finalE, start = 1):
 # =============================================================================
 # Visualization 3 Crowding vs no crowding Idea1
 # =============================================================================
-# plt.rcParams['savefig.dpi'] = 100
-# plt.rcParams['figure.dpi'] = 100
+plt.rcParams['savefig.dpi'] = 100
+plt.rcParams['figure.dpi'] = 100
 
-# '''initial positions'''
-# fig1,bx = plt.subplots()
-# for points in taken_posi:
-#     bx.plot(points[0], points[1], 'ko')
-# bx.set_title("initial positions")
-# bx.set_xlim([-550,550])
-# bx.set_ylim([-420,420])
+'''initial positions'''
+fig1,bx = plt.subplots()
+for points in taken_posi:
+    bx.plot(points[0], points[1], 'ko')
+bx.set_title('c_%s_f_%s_wS_%s_eS_%s_%s.png' %(crowding_cons,r,newWindowSize,ka,kb))
+bx.set_xlim([-550,550])
+bx.set_ylim([-420,420])
+try:
+    loop_number
+except NameError:
+    var_exists = False
+else:
+    var_exists = True
+    plt.savefig('%s_c_%s_f_%s_wS_%s_eS_%s_%s_Dots.png' %(loop_number,crowding_cons,r,newWindowSize,ka,kb))
 
-# '''see ellipses'''
-# if crowding_cons == 1: #crowding = 1, nocrowding = 0
-#     drawER = drawEllipseT(taken_posi)
-# else:
-#     drwaET = drawEllipse(taken_posi)
+'''see ellipses'''
+if crowding_cons == 1: #crowding = 1, nocrowding = 0
+    drawER = drawEllipseT(taken_posi)
+else:
+    drwaET = drawEllipse(taken_posi)
 
 # =============================================================================
 # PsychoPy Parameter
@@ -531,7 +553,8 @@ for count, i in enumerate(finalE, start = 1):
 
 # monitor specifications
 monsize = [1024, 768]
-fullscrn = True
+#fullscrn = True
+fullscrn = False
 scr = 0
 mondist = 57
 monwidth = 41
@@ -572,16 +595,16 @@ except NameError:
     var_exists = False
 else:
     var_exists = True
-    win.saveMovieFrames('Run_%s_crowding_%s_foveal_%s_winSize_%s_ellipseSize_%s_%s.png' %(loop_number,crowding_cons,r,newWindowSize,ka,kb))
-    
+    win.saveMovieFrames('%s_c_%s_f_%s_wS_%s_eS_%s_%s.png' %(loop_number,crowding_cons,r,newWindowSize,ka,kb))
+
 # =============================================================================
 # write
 # =============================================================================
 
-myFile = open('info.csv', 'a+')
-with myFile:
-    # myFields = ['Ndisks','RunTimes']
-    # writer = csv.DictWriter(myFile, fieldnames=myFields)
-    writer = csv.DictWriter(myFile)
-    # writer.writeheader()
-    writer.writerow({'Ndisks' : len(taken_posi),'RunTimes': loop_number})
+csv_data = [loop_number, len(taken_posi), taken_posi]
+for csv_dot in taken_posi:
+    csv_data.append(csv_dot)
+
+with open('info.csv', 'a+', newline='') as csvfile:
+    writer = csv.writer(csvfile)
+    writer.writerow(csv_data)
