@@ -10,7 +10,7 @@ if os.path.exists('infoNC.csv'):
     os.remove('infoNC.csv')
     
 start = time.clock()
-while(i_loop <= 2):
+while(i_loop <= 200):
     os.system('python virtual_ellipses_psycopy_adjusted_scale.py' + ' ' + str(i_loop))
     i_loop += 1
 end = time.clock()
