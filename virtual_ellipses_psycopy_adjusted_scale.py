@@ -60,7 +60,7 @@ kb = 0.1  #The parameter of semi-minor axis of ellipse
 # kb = 0.09
 
 # crowding_cons = 1 #crowding = 1, nocrowding = 0
-crowding_cons = 1
+crowding_cons = 0
 
 if crowding_cons == 1:
     if ka > kb:
@@ -386,7 +386,7 @@ def drawEllipse (e_posi):
         var_exists = False
     else:
         var_exists = True
-        plt.savefig('%s_t_%s_c_%s_f_%s_wS_%s_eS_%s_%s_E.png' %(2,loop_number,crowding_cons,r,newWindowSize,ka,kb))
+        plt.savefig('%s_c_%s_f_%s_wS_%s_eS_%s_%s_E.png' %(loop_number,crowding_cons,r,newWindowSize,ka,kb))
 
 def drawEllipseT (e_posi): 
     """
@@ -422,7 +422,7 @@ def drawEllipseT (e_posi):
         var_exists = False
     else:
         var_exists = True
-        plt.savefig('%s_t_%s_c_%s_f_%s_wS_%s_eS_%s_%s_E.png' %(2,loop_number,crowding_cons,r,newWindowSize,ka,kb))
+        plt.savefig('%s_c_%s_f_%s_wS_%s_eS_%s_%s_E.png' %(loop_number,crowding_cons,r,newWindowSize,ka,kb))
 #    plt.show()
 
 # =============================================================================
@@ -539,7 +539,7 @@ except NameError:
     var_exists = False
 else:
     var_exists = True
-    plt.savefig('%s_t_%s_c_%s_f_%s_wS_%s_eS_%s_%s_Dots.png' %(2,loop_number,crowding_cons,r,newWindowSize,ka,kb))
+    plt.savefig('%s_c_%s_f_%s_wS_%s_eS_%s_%s_Dots.png' %(loop_number,crowding_cons,r,newWindowSize,ka,kb))
 
 '''see ellipses'''
 if crowding_cons == 1: #crowding = 1, nocrowding = 0
@@ -595,7 +595,7 @@ except NameError:
     var_exists = False
 else:
     var_exists = True
-    win.saveMovieFrames('%s_t_%s_c_%s_f_%s_wS_%s_eS_%s_%s.png' %(2, loop_number,crowding_cons,r,newWindowSize,ka,kb))
+    win.saveMovieFrames('%s_c_%s_f_%s_wS_%s_eS_%s_%s.png' %(loop_number,crowding_cons,r,newWindowSize,ka,kb))
 
 # =============================================================================
 # write to csv

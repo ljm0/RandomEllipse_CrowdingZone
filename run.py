@@ -9,11 +9,11 @@ if os.path.exists('infoC.csv'):
 if os.path.exists('infoNC.csv'):
     os.remove('infoNC.csv')
     
-start = time.clock()
+start = time.time()
 while(i_loop <= 200):
     os.system('python virtual_ellipses_psycopy_adjusted_scale.py' + ' ' + str(i_loop))
     i_loop += 1
-end = time.clock()
+end = time.time()
 
 print('time', str(end-start))
 # import virtual_ellipses_underPython
