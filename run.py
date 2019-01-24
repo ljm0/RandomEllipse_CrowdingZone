@@ -8,6 +8,8 @@ if os.path.exists('infoC.csv'):
     os.remove('infoC.csv')
 if os.path.exists('infoNC.csv'):
     os.remove('infoNC.csv')
+if os.path.exists('infoR.csv'):
+    os.remove('infoR.csv')
     
 start = time.time()
 while(i_loop <= 200):

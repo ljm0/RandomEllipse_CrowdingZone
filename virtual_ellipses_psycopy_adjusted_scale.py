@@ -41,9 +41,11 @@ except Exception as e:
 # Some global variables
 # =============================================================================
 
-ka = 0.25 #The parameter of semi-major axis of ellipse
-kb = 0.1  #The parameter of semi-minor axis of ellipse
+# ka = 0.25 #The parameter of semi-major axis of ellipse
+# kb = 0.1  #The parameter of semi-minor axis of ellipse
 
+ka = 0.18
+kb = 0.18
 # ka = 0.25
 # kb = 0.05
 
@@ -59,19 +61,20 @@ kb = 0.1  #The parameter of semi-minor axis of ellipse
 # ka = 0.3
 # kb = 0.09
 
-# crowding_cons = 1 #crowding = 1, nocrowding = 0
-crowding_cons = 0
+# crowding_cons = 1 #crowding = 1, nocrowding = 0, reference = 2
+crowding_cons = 2
 
 if crowding_cons == 1:
     if ka > kb:
         tempk = ka
         ka = kb
         kb = tempk
-else:
+elif crowding_cons == 0:
     if ka < kb:
         tempk = ka
         ka = kb
         kb = tempk
+
 
 # r = 100
 r = 100 #The radius of protected fovea area
@@ -609,8 +612,12 @@ if crowding_cons == 0:
     with open('infoNC.csv', 'a+', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(csv_data)
-else:
+elif crowding_cons == 1:
     with open('infoC.csv', 'a+', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(csv_data)
+else:
+    with open('infoR.csv', 'a+', newline ='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(csv_data)
 
