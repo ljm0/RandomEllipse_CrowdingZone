@@ -113,9 +113,9 @@ event.waitKeys(keyList = ['space'])
 # =============================================================================
 # file pool
 # =============================================================================
-path_c = '/users/MiaoLi/Desktop/SCALab/Programming/Crowding_and_numerosity/Stimuli20190125/C/selected/'
-path_nc = '/users/MiaoLi/Desktop/SCALab/Programming/Crowding_and_numerosity/Stimuli20190125/NC/selected/'
-path_ref = '/users/MiaoLi/Desktop/SCALab/Programming/Crowding_and_numerosity/Stimuli20190125/REF/selected/'
+path_c =   'D:/MiaoProject/Stimuli20190125/C/selected/'
+path_nc =  'D:/MiaoProject/Stimuli20190125/NC/selected/'
+path_ref = 'D:/MiaoProject/Stimuli20190125/REF/selected/'
 dirs_c = os.listdir(path_c)
 dirs_nc = os.listdir(path_nc)
 dirs_ref = os.listdir(path_ref)
@@ -170,20 +170,47 @@ core.wait(5)
 show_text = ''
 show_resp = visual.TextStim(win)
 
-keys = event.getKeys(keyList = ['1','2','3','4','5','6','7','8','9','0','return','backspace'])
-# key_resp = event.BuilderKeyResponse()
+theseKeys3 = event.getKeys(keyList=['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'return', 'backspace'])
+key_resp_3 = event.BuilderKeyResponse()
 
-if 'escape' in keys:
-    core.quit()
-else:
-    if keys:
-        if 'backspace' in keys:
-            show_text = show_text[:-1]
-        show_text = show_text.join(keys)
-    show_resp.setText(show_text)
-    show_resp.draw()
-    win.flip()
-    core.wait(2)
+# check for quit:
+if "escape" in theseKeys3:
+    endExpNow = True
+if len(theseKeys3) > 0:  # at least one key was pressed
+    #key_resp_3.keys.extend(theseKeys3)  # storing all keys
+    if "backspace" in theseKeys3:
+        key_resp_3.keys = key_resp_3.keys[:-1]
+    key_resp_3.keys.extend(
+        [key for key in theseKeys3 if key != "return" and key != "backspace"])
+    show_resp.setText("".join(key_resp_3.keys))
+
+# convert the list of strings into a single string
+key_str = "".join(key_resp_3.keys)
+
+if len(key_str) != 0:
+    # then convert the string to a number
+    key_num = int(key_str)
+
+if "return" in theseKeys3:
+    show_resp.setText('')
+    continueRoutine = False
+
+show_resp.setText(key_num)
+show_resp.draw()
+win.flip()
+core.wait(2)
+
+# if 'escape' in keys:
+#     core.quit()
+# else:
+#     if keys:
+#         if 'backspace' in keys:
+#             show_text = show_text[:-1]
+#         show_text = show_text.join(keys)
+#     show_resp.setText(show_text)
+#     show_resp.draw()
+#     win.flip()
+#     core.wait(2)
     
 
 def singal_trial(data_file):
@@ -196,7 +223,8 @@ def singal_trial(data_file):
     pass
 
 
-
+win.close()
+core.quit()
 
 
 
