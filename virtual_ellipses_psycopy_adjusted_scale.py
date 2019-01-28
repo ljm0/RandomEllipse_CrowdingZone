@@ -41,11 +41,11 @@ except Exception as e:
 # Some global variables
 # =============================================================================
 
-# ka = 0.25 #The parameter of semi-major axis of ellipse
-# kb = 0.1  #The parameter of semi-minor axis of ellipse
+ka = 0.5 #The parameter of semi-major axis of ellipse
+kb = 0.2  #The parameter of semi-minor axis of ellipse
 
-ka = 0.18
-kb = 0.18
+# ka = 0.18
+# kb = 0.18
 # ka = 0.25
 # kb = 0.05
 
@@ -62,7 +62,7 @@ kb = 0.18
 # kb = 0.09
 
 # crowding_cons = 1 #crowding = 1, nocrowding = 0, reference = 2
-crowding_cons = 2
+crowding_cons = 1
 
 if crowding_cons == 1:
     if ka > kb:
@@ -587,6 +587,10 @@ for i in range(len(taken_posi)):
       trgt_disk.setPos(taken_posi[i]) 
       # print("i", taken_posi[i])
       trgt_disk.draw()
+
+#add a white frame
+frame = visual.Rect(win,size = [1750,1300],units = 'pix')
+frame.draw()
 win.flip()
 
 #保存一帧屏幕
@@ -598,7 +602,7 @@ except NameError:
     var_exists = False
 else:
     var_exists = True
-    win.saveMovieFrames('%s_c_%s_f_%s_wS_%s_eS_%s_%s.png' %(loop_number,crowding_cons,r,newWindowSize,ka,kb))
+    win.saveMovieFrames('%s_c_%s_f_%s_wS_%s_eS_%s_%s_%s.png' %(loop_number,crowding_cons,r,newWindowSize,ka,kb,len(taken_posi)))
 
 # =============================================================================
 # write to csv
