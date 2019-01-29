@@ -38,11 +38,11 @@ except Exception as e:
     #sys.exit(0)
 
 # =============================================================================
-# Some global variables
+# Some global variables (100pix = 3.75cm = 3.75 deg in this setting)
 # =============================================================================
 
-ka = 0.5 #The parameter of semi-major axis of ellipse
-kb = 0.2  #The parameter of semi-minor axis of ellipse
+ka = 0.25 #The parameter of semi-major axis of ellipse
+kb = 0.1  #The parameter of semi-minor axis of ellipse
 
 # ka = 0.18
 # kb = 0.18
@@ -62,7 +62,7 @@ kb = 0.2  #The parameter of semi-minor axis of ellipse
 # kb = 0.09
 
 # crowding_cons = 1 #crowding = 1, nocrowding = 0, reference = 2
-crowding_cons = 1
+crowding_cons = 0
 
 if crowding_cons == 1:
     if ka > kb:
@@ -79,7 +79,10 @@ elif crowding_cons == 0:
 # r = 100
 r = 100 #The radius of protected fovea area
 
+# newWindowSize = 0.4
+# newWindowSize =0.5
 # newWindowSize = 0.6
+# newWindowSize = 0.7
 newWindowSize = 0.8
 # newWindowSize = 1 #How much presentation area do we need?
 disk_radius = 3.82
@@ -571,10 +574,9 @@ win = visual.Window(monitor=monitorsetting, size=monsize, screen=scr, units='pix
 #win = visual.Window((1024, 768), units='pix', fullscr=True)
 
 # fixation 
-text_msg = visual.TextStim(win, text= None, color=(-1.0, -1.0, -1.0))
-text_msg.setText('+')
-text_msg.setPos([0,0])
-text_msg.draw()
+fixation = visual.TextStim(win, text= '+',bold = True, color=(-1.0, -1.0, -1.0))
+fixation.setPos([0,0])
+fixation.draw()
 
 #core.wait(0.80)
 
@@ -589,7 +591,9 @@ for i in range(len(taken_posi)):
       trgt_disk.draw()
 
 #add a white frame
-frame = visual.Rect(win,size = [1750,1300],units = 'pix')
+frame = visual.Rect(win,size = [1750,1300],units = 'pix') #window size 0.8
+# frame = visual.Rect(win,size = [1550,1100],units = 'pix') #0.7
+# frame = visual.Rect(win,size = [1400,950],units = 'pix')#0.6
 frame.draw()
 win.flip()
 
