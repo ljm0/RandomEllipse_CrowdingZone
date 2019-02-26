@@ -46,6 +46,8 @@ kb = 0.1  #The parameter of semi-minor axis of ellipse
 
 # ka = 0.18
 # kb = 0.18
+# ka = math.sqrt(0.25*0.1)
+# kb = math.sqrt(0.25*0.1)
 # ka = 0.25
 # kb = 0.05
 
