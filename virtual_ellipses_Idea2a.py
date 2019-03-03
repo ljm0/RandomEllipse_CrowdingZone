@@ -62,10 +62,11 @@ except Exception as e:
 # =============================================================================
 ka = 0.25#The parameter of semi-major axis of ellipse.ka > kb, radial ellipse; ka < kb, tangential ellipse; ka = kb, circle
 kb = 0.1
-r = 200 #The radius of protected fovea area
+r = 100 #The radius of protected fovea area
 extra_disk =1 # extra disk could be 1 or 2
-newWindowSize = 0.8 #How much presentation area do we need?
+newWindowSize = 0.5 #How much presentation area do we need?
 disk_radius = 3.82
+frameSize = [1850, 1400] #for win = 0.8
 
 # =============================================================================
 # Possible positions
@@ -401,19 +402,6 @@ else 不相交
  取下一个takenlist的点，直到和所有已知的takenlist都不相交，
   则把该点加入到takenlist,并删除positions里的该点，并删除该点周围的椭圆格点
 '''
-#TODO
-# def caculateNewList2(rndm_dsk_crdnt, tkn_lst):
-#     global positions
-#     v_ellipse2 = defineVirtualEllipses(rndm_dsk_crdnt)
-#     for_number = 0
-#     for en in tkn_lst:
-#         p_e = defineVirtualEllipses(en)
-#         for_number = for_number +1
-#         compare_ellipses = [p_e, v_ellipse2]
-#         intersecx, intersecy = ellipse_polyline_intersection(compare_ellipses)
-    
-#     return v_ellipse2
-# my_e = caculateNewList2(positio)
 
 def drawEllipse (e_posi): 
     """
@@ -589,30 +577,96 @@ for p in taken_posi:
     #calculation of the two extra positions
     
     #crowding condition
-    #one direction of the disk, away from the center
-    new_x1 = (virtual_e_p[0]*(virtual_e_p[2]/2 + e_p))/e_p
-    new_y1 = (virtual_e_p[1]*(virtual_e_p[2]/2 + e_p))/e_p
-    new_p1 = (new_x1,new_y1)
-    #the other direction of the disk, close to tge center
-    new_x2 = (virtual_e_p[0]*abs((virtual_e_p[2]/2 - e_p)))/e_p
-    new_y2 = (virtual_e_p[1]*abs((virtual_e_p[2]/2 - e_p)))/e_p
-    new_p2 = (new_x2,new_y2)
+    if virtual_e_p[0] == 0 and virtual_e_p[1] > 0: #several conditions that the taken_posi is on the x or y axis
+        new_x1 = 0
+        new_y1 = virtual_e_p[1] + virtual_e_p[2]/2
+        new_p1 =(new_x1, new_y1)
+        
+        new_x2 = 0
+        new_y2 = virtual_e_p[1] - virtual_e_p[2]/2
+        new_p2 = (new_x2, new_y2)
+    elif virtual_e_p[0] == 0 and virtual_e_p[1] < 0:
+        new_x1 = 0
+        new_y1 = virtual_e_p[1] - virtual_e_p[2]/2
+        new_p1 =(new_x1, new_y1)
+        
+        new_x2 = 0
+        new_y2 = virtual_e_p[1] + virtual_e_p[2]/2
+        new_p2 = (new_x2, new_y2)
+    elif virtual_e_p[1] == 0 and virtual_e_p[0]>0:
+        new_x1 = virtual_e_p[0] + virtual_e_p[2]/2
+        new_y1 = 0
+        new_p1 =(new_x1, new_y1)
+        
+        new_x2 = virtual_e_p[0] - virtual_e_p[2]/2
+        new_y2 = 0
+        new_p2 = (new_x2, new_y2)
+    elif virtual_e_p[1] == 0 and virtual_e_p[0] <0:
+        new_x1 = virtual_e_p[0] - virtual_e_p[2]/2
+        new_y1 = 0
+        new_p1 =(new_x1, new_y1)
+        
+        new_x2 = virtual_e_p[0] + virtual_e_p[2]/2
+        new_y2 = 0
+        new_p2 = (new_x2, new_y2)
+    else:
+        #one direction of the disk, away from the center
+        new_x1 = (virtual_e_p[0]*(virtual_e_p[2]/2 + e_p))/e_p
+        new_y1 = (virtual_e_p[1]*(virtual_e_p[2]/2 + e_p))/e_p
+        new_p1 = (new_x1,new_y1)
+        #the other direction of the disk, close to tge center
+        new_x2 = (virtual_e_p[0]*abs((virtual_e_p[2]/2 - e_p)))/e_p
+        new_y2 = (virtual_e_p[1]*abs((virtual_e_p[2]/2 - e_p)))/e_p
+        new_p2 = (new_x2,new_y2)
     crowding_extra_1.append(new_p1)
     crowding_extra_2.append(new_p2)
     
     #no crowding condition 
-    m = (virtual_e_p[1]*e_p/virtual_e_p[0])-virtual_e_p[2]/2
-    q = virtual_e_p[1]**2/virtual_e_p[0]
-    n = m*q/(m+virtual_e_p[2]/2)
-    new_x3 = m*(m+virtual_e_p[2]/2)/n-n
-    new_y3 = e_p*n/(m +virtual_e_p[2]/2)
-    new_p3 = (new_x3, new_y3)
+    if virtual_e_p[0] == 0 and virtual_e_p[1] > 0:
+        new_x3 = virtual_e_p[2]/2
+        new_y3 = virtual_e_p[1]
+        new_p3 =(new_x3, new_y3)
+        
+        new_x4 = -virtual_e_p[2]/2
+        new_y4 = virtual_e_p[1]
+        new_p4 = (new_x4, new_y4)
+    elif virtual_e_p[0] == 0 and virtual_e_p[1] < 0:
+        new_x3 = -virtual_e_p[2]/2
+        new_y3 = virtual_e_p[1]
+        new_p3 =(new_x3, new_y3)
+        
+        new_x4 = virtual_e_p[2]/2
+        new_y4 = virtual_e_p[1]
+        new_p4 = (new_x4, new_y4)
+    elif virtual_e_p[1] == 0 and virtual_e_p[0]>0:
+        new_x3 = virtual_e_p[0]
+        new_y3 = -virtual_e_p[2]/2
+        new_p3 =(new_x3, new_y3)
+        
+        new_x4 = virtual_e_p[0]
+        new_y4 = virtual_e_p[2]/2
+        new_p4 = (new_x4, new_y4)
+    elif virtual_e_p[1] == 0 and virtual_e_p[0] <0:
+        new_x3 = virtual_e_p[0] 
+        new_y3 = virtual_e_p[2]/2
+        new_p3 =(new_x3, new_y3)
+        
+        new_x4 = virtual_e_p[0] 
+        new_y4 = -virtual_e_p[2]/2
+        new_p4 = (new_x4, new_y4)
+    else:
+        m = (virtual_e_p[1]*e_p/virtual_e_p[0])-virtual_e_p[2]/2
+        q = virtual_e_p[1]**2/virtual_e_p[0]
+        n = m*q/(m+virtual_e_p[2]/2)
+        new_x3 = m*(m+virtual_e_p[2]/2)/n-n
+        new_y3 = e_p*n/(m +virtual_e_p[2]/2)
+        new_p3 = (new_x3, new_y3)
+
+        b = virtual_e_p[1]*(m+virtual_e_p[2])/e_p-q
+        new_x4 = virtual_e_p[0]-b
+        new_y4 = virtual_e_p[0]*(b+q)/virtual_e_p[1]
+        new_p4 = (new_x4, new_y4)
     no_crowding_extra_1.append(new_p3)
-    
-    b = virtual_e_p[1]*(m+virtual_e_p[2])/e_p-q
-    new_x4 = virtual_e_p[0]-b
-    new_y4 = virtual_e_p[0]*(b+q)/virtual_e_p[1]
-    new_p4 = (new_x4, new_y4)
     no_crowding_extra_2.append(new_p4)
 
 # #see them
@@ -834,9 +888,9 @@ win = visual.Window(monitor=monitorsetting, size=monsize, screen=scr, units='pix
 #win = visual.Window((1024, 768), units='pix', fullscr=True)
 
 # fixation 
-fixation = visual.TextStim(win, text= '+',bold = True, color=(-1.0, -1.0, -1.0))
-fixation.setPos([0,0])
-fixation.draw()
+# fixation = visual.TextStim(win, text= '+',bold = True, color=(-1.0, -1.0, -1.0))
+# fixation.setPos([0,0])
+# fixation.draw()
 
 #core.wait(0.80)
 
@@ -846,17 +900,20 @@ trgt_disk = visual.Circle(win, radius = disk_radius, lineColor = "black", fillCo
 #win.flip()
 
 #add a white frame
-frameSize = [1850, 1400]
-frame = visual.Rect(win,size = frameSize,units = 'pix') #window size 0.8
-# frame = visual.Rect(win,size = [1550,1100],units = 'pix') #0.7
-# frame = visual.Rect(win,size = [1400,950],units = 'pix')#0.6
-frame.draw()
+
+# frame = visual.Rect(win,size = frameSize,units = 'pix') #window size 0.8
+# # frame = visual.Rect(win,size = [1550,1100],units = 'pix') #0.7
+# # frame = visual.Rect(win,size = [1400,950],units = 'pix')#0.6
+# frame.draw()
 # win.flip()
 
 
 
 if extra_disk == 2:
     #crowding
+    fixation = visual.TextStim(win, text= '+',bold = True, color=(-1.0, -1.0, -1.0))
+    fixation.setPos([0,0])
+    fixation.draw()
     frame = visual.Rect(win,size = frameSize,units = 'pix')
     frame.draw()
     for i in range(len(taken_posi)):
@@ -886,6 +943,9 @@ if extra_disk == 2:
     # win.flip()
     
     #no crowding
+    fixation = visual.TextStim(win, text= '+',bold = True, color=(-1.0, -1.0, -1.0))
+    fixation.setPos([0,0])
+    fixation.draw()
     frame = visual.Rect(win,size = frameSize,units = 'pix')
     frame.draw()
     for i in range(len(taken_posi)):
@@ -913,6 +973,9 @@ if extra_disk == 2:
 elif extra_disk == 1:
     
     #crowding
+    fixation = visual.TextStim(win, text= '+',bold = True, color=(-1.0, -1.0, -1.0))
+    fixation.setPos([0,0])
+    fixation.draw()
     frame = visual.Rect(win,size = frameSize,units = 'pix')
     frame.draw()
     if selected_crowding == 0:
@@ -953,6 +1016,9 @@ elif extra_disk == 1:
             win.saveMovieFrames('%s_crowding_extra1_f_%s_wS_%s_eS_%s_%s_%s.png' %(loop_number,r,newWindowSize,ka,kb,(len(taken_posi)+len(no_crowding_extra_2))))
 
     #no crowding
+    fixation = visual.TextStim(win, text= '+',bold = True, color=(-1.0, -1.0, -1.0))
+    fixation.setPos([0,0])
+    fixation.draw()
     frame = visual.Rect(win,size = frameSize,units = 'pix')
     frame.draw()
     if selected_no_crowding == 0:
