@@ -80,7 +80,6 @@ elif crowding_cons == 0:
 
 # r = 100
 r = 100 #The radius of protected fovea area
-
 # newWindowSize = 0.4
 # newWindowSize =0.5
 # newWindowSize = 0.6
@@ -434,7 +433,7 @@ def drawEllipseT (e_posi):
 #    plt.show()
 
 # =============================================================================
-# Denerate disks with corresponding virtual ellipses
+# Generate disks with corresponding virtual ellipses
 # =============================================================================
 
 #first random disk
