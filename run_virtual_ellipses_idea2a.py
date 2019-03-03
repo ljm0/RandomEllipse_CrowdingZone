@@ -7,11 +7,11 @@ Created on Sun Mar  3 12:49:29 2019
 import os
 import time
 
-i_loop=5
+i_loop=1
 
 start = time.time()
 while(i_loop <= 10):
-    os.system('python virtual_ellipses_Idea2.py' + ' ' + str(i_loop))
+    os.system('python virtual_ellipses_Idea2a.py' + ' ' + str(i_loop))
     i_loop += 1
 end = time.time()
 

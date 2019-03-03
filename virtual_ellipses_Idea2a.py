@@ -26,7 +26,7 @@ TODO: rfp (radial frequency patterns) modulation for foveal
     Idea2:
         crowding and no crowding conditions by filling the disply with
         a grouped tangential and radial ellipses.
-        
+        2.1 fixed position for extra disks.-they are always in a line of the radial and tangential direction
 """
 
 import numpy as np 
@@ -586,6 +586,8 @@ for p in taken_posi:
     e_p = distance.euclidean(p, (0,0)) #eccentricity
     virtual_e_p = defineVirtualEllipses(p) # virtual ellipses
     
+    #calculation of the two extra positions
+    
     #crowding condition
     #one direction of the disk, away from the center
     new_x1 = (virtual_e_p[0]*(virtual_e_p[2]/2 + e_p))/e_p
@@ -989,6 +991,59 @@ elif extra_disk == 1:
             var_exists = True
             win.saveMovieFrames('%s_no_crowding_extra1_f_%s_wS_%s_eS_%s_%s_%s.png' %(loop_number,r,newWindowSize,ka,kb,(len(taken_posi)+len(no_crowding_extra_2))))
 
+# =============================================================================
+# write to csv
+# =============================================================================
+if extra_disk == 2:
+    #crowding
+    csv_data_crowding_t = [loop_number, len(taken_posi)*3, taken_posi, crowding_extra_1,crowding_extra_2]
+    initial_posi = [csv_dot for csv_dot in taken_posi]
+    c_extra1 = [csv_dot for csv_dot in crowding_extra_1]
+    c_extra2 = [csv_dot for csv_dot in crowding_extra_2]
+    csv_data_crowding = csv_data_crowding_t + initial_posi + c_extra1 + c_extra2
+    #no crowding
+    csv_data_no_crowding_t = [loop_number, len(taken_posi)*3, taken_posi, no_crowding_extra_1,no_crowding_extra_2]
+    nc_extra1 = [csv_dot for csv_dot in no_crowding_extra_1]
+    nc_extra2 = [csv_dot for csv_dot in no_crowding_extra_2]
+    csv_data_no_crowding = csv_data_no_crowding_t + initial_posi + nc_extra1 + nc_extra2
+
+    with open('crowding_extra2.csv', 'a+', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(csv_data_crowding)
+    with open('no_crowding_extra2.csv', 'a+', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(csv_data_no_crowding)
+
+elif extra_disk ==1:
+    #crowding
+    initial_posi = [csv_dot for csv_dot in taken_posi]
+    if selected_crowding == 0:
+        csv_data_crowding_t = [loop_number, len(taken_posi)*2, taken_posi, crowding_extra_1]
+        c_extra1 = [csv_dot for csv_dot in crowding_extra_1]
+        csv_data_crowding = csv_data_crowding_t + initial_posi + c_extra1
+        
+    else:
+        csv_data_crowding_t = [loop_number, len(taken_posi)*2, taken_posi, crowding_extra_2]
+        c_extra2 = [csv_dot for csv_dot in crowding_extra_2]
+        csv_data_crowding = csv_data_crowding_t + initial_posi + c_extra2
+        
+    with open('crowding_extra1.csv', 'a+', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(csv_data_crowding)
+    
+    #no crowding
+    if selected_no_crowding == 0:
+        csv_data_no_crowding_t = [loop_number, len(taken_posi)*2, taken_posi, no_crowding_extra_1]
+        nc_extra1 = [csv_dot for csv_dot in no_crowding_extra_1]
+        csv_data_no_crowding = csv_data_crowding_t + initial_posi + nc_extra1
+    else:
+        csv_data_no_crowding_t = [loop_number, len(taken_posi)*2, taken_posi, no_crowding_extra_2]
+        nc_extra2 = [csv_dot for csv_dot in no_crowding_extra_2]
+        csv_data_no_crowding = csv_data_crowding_t + initial_posi + nc_extra2
+        
+    with open('no_crowding_extra1.csv', 'a+', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(csv_data_no_crowding)
 # =============================================================================
 # visualization2
 # =============================================================================
