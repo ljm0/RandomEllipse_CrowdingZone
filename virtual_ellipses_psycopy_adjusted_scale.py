@@ -594,7 +594,10 @@ for i in range(len(taken_posi)):
 #add a white frame
 frame = visual.Rect(win,size = [1750,1300],units = 'pix') #window size 0.8
 # frame = visual.Rect(win,size = [1550,1100],units = 'pix') #0.7
-# frame = visual.Rect(win,size = [1400,950],units = 'pix')#0.6
+# frame = visual.Rect(win,size = [1400,950],units = 'pix')#0.6 
+# [1300, 850] 0.5
+# [1100, 700] 0.4
+# [1000, 600] 0.3
 frame.draw()
 win.flip()
 
