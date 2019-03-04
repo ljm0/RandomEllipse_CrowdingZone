@@ -63,10 +63,28 @@ except Exception as e:
 ka = 0.25#The parameter of semi-major axis of ellipse.ka > kb, radial ellipse; ka < kb, tangential ellipse; ka = kb, circle
 kb = 0.1
 r = 100 #The radius of protected fovea area
-extra_disk =1 # extra disk could be 1 or 2
-newWindowSize = 0.5 #How much presentation area do we need?
+extra_disk = 2 # extra disk could be 1 or 2
+newWindowSize = 0.8 #How much presentation area do we need?
+#newWindowSize = 0.7
+#newWindowSize = 0.6
+#newWindowSize = 0.5
+#newWindowSize = 0.4
+#newWindowSize = 0.3
 disk_radius = 3.82
-frameSize = [1850, 1400] #for win = 0.8
+
+if newWindowSize == 0.8:
+    frameSize = [1850, 1400] #for win = 0.8
+elif newWindowSize == 0.7:
+    frameSize = [1700, 1250]
+elif newWindowSize == 0.6:
+    frameSize = [1550, 1100]
+elif newWindowSize == 0.5:
+    frameSize = [1350,1000]
+elif newWindowSize == 0.4:
+    frameSize = [1150, 800]
+elif newWindowSize == 0.3:
+    frameSize =[900, 650]
+
 
 # =============================================================================
 # Possible positions
