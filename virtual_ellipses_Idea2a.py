@@ -1111,7 +1111,7 @@ elif extra_disk ==1:
         c_extra2 = [csv_dot for csv_dot in crowding_extra_2]
         csv_data_crowding = csv_data_crowding_t + initial_posi + c_extra2
         
-    with open('crowding_extra1.csv', 'a+', newline='') as csvfile:
+    with open('crowding_extra1_%s.csv' %(newWindowSize), 'a+', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(csv_data_crowding)
     
@@ -1125,7 +1125,7 @@ elif extra_disk ==1:
         nc_extra2 = [csv_dot for csv_dot in no_crowding_extra_2]
         csv_data_no_crowding = csv_data_crowding_t + initial_posi + nc_extra2
         
-    with open('no_crowding_extra1.csv', 'a+', newline='') as csvfile:
+    with open('no_crowding_extra1_%s.csv' %(newWindowSize), 'a+', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(csv_data_no_crowding)
 # =============================================================================
