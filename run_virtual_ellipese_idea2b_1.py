@@ -12,8 +12,8 @@ import time
 i_loop=1
 
 start = time.time()
-while(i_loop <= 10):
-    os.system('python virtual_ellipses_Idea2b.py' + ' ' + str(i_loop))
+while(i_loop <= 1):
+    os.system('python virtual_ellipses_Idea2b_1.py' + ' ' + str(i_loop))
     i_loop += 1
 end = time.time()
 
