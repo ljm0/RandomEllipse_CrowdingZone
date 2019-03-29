@@ -126,7 +126,7 @@ def drawEllipse_full(e_posi):
 # file = r'\Users\MiaoLi\Desktop\SCALab\Crowding_in_percived_numerosity\Exp1_crowding_numerosity_direct_estimation_idea1\StimuliDetails\SelectedStimuliInfo.xlsx'
 file = r'D:\MiaoProject\count\backup\SelectedStimuliInfo.xlsx'
 stimuliInfo_df=pd.read_excel(file,header = None)
-posi_lists_temp = stimuliInfo_df[4].tolist()
+posi_lists_temp = stimuliInfo_df[5].tolist()
 
 # df to list
 posi_list=[]
@@ -173,35 +173,36 @@ for indexPosiList in range(0,len(posi_list)):
 # =============================================================================
 file2 = r'D:\MiaoProject\count\backup\totalData.xlsx'
 totalData_df = pd.read_excel(file2)
-col_image = stimuliInfo_df.ix[:, [1]]
-col_N_disk = stimuliInfo_df.ix[:, [2]]
 
 #get imageFinne number
 def imageFile_to_number(filename):
-    tempFileNumber = ''
-    for in_file in filename:
-        tempFileNumber = tempFileNumber + in_file
-        if not tempFileNumber.isdigit():
-            tempFileNumber = tempFileNumber[0:len(tempFileNumber)-1]
-            return int(tempFileNumber)
+   tempFileNumber = ''
+   for in_file in filename:
+       tempFileNumber = tempFileNumber + in_file
+       if not tempFileNumber.isdigit():
+           tempFileNumber = tempFileNumber[0:len(tempFileNumber)-1]
+           return int(tempFileNumber)
 totalData_df['fileNumber'] = totalData_df['imageFile'].map(imageFile_to_number)
 
 # change col name
-name_list = list(range(0,62))
+name_list = list(range(0,stimuliInfo_df.shape[1]))
 name_list = [str(x) for x in name_list]
 name_list[0] = 'index_stimuliInfo'
+name_list[1] = 'CrowdingCons'
 name_list[2] = 'fileNumber'
 name_list[3] = 'N_disk'
+name_list[4] = 'winsize'
 stimuliInfo_df.columns = name_list
 # add count number to a new col
 stimuliInfo_df.insert(1, 'count_number',list_count_in_crowdingZone)
 # select three cols 'fileNumber','N_disk','count'
-col_n = ['fileNumber','N_disk','index_stimuliInfo','count_number']
+col_n = ['fileNumber','N_disk','index_stimuliInfo','CrowdingCons','count_number','winsize']
 selected_df = pd.DataFrame(stimuliInfo_df,columns = col_n)
 #merge two dataframe
 #FIXME the number of row is different
-final_df = pd.merge(totalData_df, selected_df, how='left', on=['fileNumber','N_disk'])
-final_df.to_excel('addCount_totalData.xlsx')
+final_df = pd.merge(totalData_df, selected_df, how='left', on=['fileNumber', 'N_disk','CrowdingCons','winsize'])
+#, validate="one_to_one",indicator=True
+final_df.to_excel('addCount_totalData2.xlsx')
 
 
 #group_total_df = pd.pivot_table(totalData_df, index=['fileNumber','N_disk'])
