@@ -634,9 +634,6 @@ tempListF= tempTemplist # all position positions to add extra disks
 '''extra positions: radial and tangential direction'''
 radial_dic_1 = {}
 radial_dic_2 = {} 
-tan_dic_1 = {} 
-tan_dic_2 = {} 
-
 # tan_dic = {}
 '''
 x = [100,2,300,4,75]
@@ -647,7 +644,7 @@ print(dct)
 # {'lst_300': [], 'lst_75': [], 'lst_100': [], 'lst_2': [], 'lst_4': []}
 '''
 
-
+# for each disc position, take the radial area (away from foveal as base)
 for count, i in enumerate(finalE, start = 1):
     ellipsePolygon = ellipseToPolygon([i])[0] #radial ellipse
     # ellipsePolygonT = ellipseToPolygon([i])[1]#tangential ellipse
@@ -655,16 +652,30 @@ for count, i in enumerate(finalE, start = 1):
     # epPolygonT = Polygon(ellipsePolygonT)
     radial_dic_1[(i[0],i[1])] = [] #set the keys of the dictionary--taken_posi
     radial_dic_2[(i[0],i[1])] = []
-    tan_dic_1[(i[0],i[1])] = []
-    tan_dic_2[(i[0],i[1])] = []
     # tan_dic[(i[0],i[1])] = []
     for posi in tempListF:
         if epPolygon.contains(Point(posi)):
-            if distance.euclidean(taken_posi[count-1], (0,0)) > distance.euclidean(posi, (0,0)): # close to foveal
+            if distance.euclidean(taken_posi[count-1], (0,0)) > distance.euclidean(posi, (0,0)): # close to foveal (we dont use it cause the position might fall into the foveal protected area)
                 radial_dic_1[(i[0], i[1])].append(posi)
-            else: #away from foveal
+            else: #away from foveal (take this)
                 radial_dic_2[(i[0],i[1])].append(posi)
 
+# rotate pi/2, pi, 1.5pi to get the other possible positions in other 3 areas
+radial_dic_1_new = {}
+tan_dic_1 = {} 
+tan_dic_2 = {} 
+for centralPosi, possiblePois in radial_dic_2.items():
+    print(centralPosi,possiblePois)
+    radial_dic_1_new[centralPosi] = []
+    tan_dic_1[centralPosi] =[]
+    tan_dic_2[centralPosi] =[]
+    for p in possiblePois:
+        p_radial1 = rotateposi(centralPosi, p, theta = pi)
+        p_tan1 = rotateposi(centralPosi, p, theta = pi/2)
+        p_tan2 = rotateposi(centralPosi, p, theta = 1.5*pi)
+        radial_dic_1_new[centralPosi].append(p_radial1)
+        tan_dic_1[centralPosi].append(p_tan1)
+        tan_dic_2[centralPosi].append(p_tan2)
 
 
 
